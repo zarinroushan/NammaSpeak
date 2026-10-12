@@ -1,0 +1,207 @@
+[
+  {
+    "id": "s1",
+    "title": "At the Bus Stand",
+    "category": "transport",
+    "speaker": "Bus Conductor",
+    "speaker_avatar": "🚌",
+    "question": "“ಯಾವ ಊರಿಗೆ ಹೋಗ್ಬೇಕು?” (Where do you need to go?)",
+    "context": "You are at the bus terminal and need to confirm if this bus is heading to Mysuru.",
+    "prompt": "Which Kannada response politely asks if this bus goes to Mysuru?",
+    "related_phrase_id": "p3",
+    "options": [
+      {
+        "id": "o1",
+        "text": "ಈ ಬಸ್ ಮೈಸೂರುಗೆ ಹೋಗುತ್ತದೆಯೇ?",
+        "roman": "Ī bas Mysūrige hōguttadeyē?",
+        "correct": true,
+        "why": "Correct! This directly and politely checks if the bus goes to Mysuru before boarding."
+      },
+      {
+        "id": "o2",
+        "text": "ಒಂದು ಬಿಸಿ ಫಿಲ್ಟರ್ ಕಾಫಿ ಕೊಡಿ",
+        "roman": "Ondu bisi philtar kāphi koḍi",
+        "correct": false,
+        "why": "This means “Please give me one hot filter coffee.” This is used at a café, not on a bus."
+      },
+      {
+        "id": "o3",
+        "text": "ಧನ್ಯವಾದಗಳು",
+        "roman": "Dhanyavādagaḷu",
+        "correct": false,
+        "why": "This means “Thank you.” While polite, it does not communicate your destination."
+      }
+    ]
+  },
+  {
+    "id": "s2",
+    "title": "Finding Your Way",
+    "category": "transport",
+    "speaker": "Local Resident",
+    "speaker_avatar": "🚶",
+    "question": "“ಹೇಳಿ, ಏನಾಗಬೇಕಿತ್ತು?” (Yes, what do you need?)",
+    "context": "You are standing at an unfamiliar junction and need to locate the nearest bus stop.",
+    "prompt": "Choose the phrase that asks for the location of the bus stop.",
+    "related_phrase_id": "p4",
+    "options": [
+      {
+        "id": "o1",
+        "text": "ನನಗೆ ಇದು ಬೇಕು",
+        "roman": "Nanage idu bēku",
+        "correct": false,
+        "why": "This means “I want this.” Use this when pointing to goods in a store."
+      },
+      {
+        "id": "o2",
+        "text": "ಬಸ್ ನಿಲ್ದಾಣ ಎಲ್ಲಿದೆ?",
+        "roman": "Bas nildāṇa ellide?",
+        "correct": true,
+        "why": "Spot on! “ಬಸ್ ನಿಲ್ದಾಣ ಎಲ್ಲಿದೆ?” means “Where is the bus stop?”"
+      },
+      {
+        "id": "o3",
+        "text": "ನೀರು ಕೊಡಿ, ದಯವಿಟ್ಟು",
+        "roman": "Nīru koḍi, dayaviṭṭu",
+        "correct": false,
+        "why": "This means “Water, please.” Useful in eateries, not for navigation."
+      }
+    ]
+  },
+  {
+    "id": "s3",
+    "title": "At the Local Darshini",
+    "category": "food",
+    "speaker": "Café Counter Attendant",
+    "speaker_avatar": "☕",
+    "question": "“ಏನ್ ಬೇಕು ಸರ್/ಮೇಡಂ?” (What would you like, Sir/Madam?)",
+    "context": "You want to order a fresh South Indian filter coffee in the morning.",
+    "prompt": "Which phrase correctly requests a hot filter coffee?",
+    "related_phrase_id": "p7",
+    "options": [
+      {
+        "id": "o1",
+        "text": "ಒಂದು ಬಿಸಿ ಫಿಲ್ಟರ್ ಕಾಫಿ ಕೊಡಿ",
+        "roman": "Ondu bisi philtar kāphi koḍi",
+        "correct": true,
+        "why": "Perfect! “ಒಂದು ಬಿಸಿ ಫಿಲ್ಟರ್ ಕಾಫಿ ಕೊಡಿ” orders one hot filter coffee."
+      },
+      {
+        "id": "o2",
+        "text": "ಬಸ್ ನಿಲ್ದಾಣ ಎಲ್ಲಿದೆ?",
+        "roman": "Bas nildāṇa ellide?",
+        "correct": false,
+        "why": "This asks where the bus stop is."
+      },
+      {
+        "id": "o3",
+        "text": "ದಯವಿಟ್ಟು ಸಹಾಯ ಮಾಡಿ",
+        "roman": "Dayaviṭṭu sahāya māḍi",
+        "correct": false,
+        "why": "This means “Please help me.” It is overly dramatic for placing an order."
+      }
+    ]
+  },
+  {
+    "id": "s4",
+    "title": "At the Market Stall",
+    "category": "shopping",
+    "speaker": "Vendor",
+    "speaker_avatar": "🛍️",
+    "question": "“ಇದು ತುಂಬಾ ಒಳ್ಳೆಯ ಗುಣಮಟ್ಟದ್ದು.” (This is very high quality.)",
+    "context": "You are looking at handicrafts or vegetables and want to know the price.",
+    "prompt": "Choose the standard phrase to ask how much it costs.",
+    "related_phrase_id": "p8",
+    "options": [
+      {
+        "id": "o1",
+        "text": "ನಮಸ್ಕಾರ",
+        "roman": "Namaskāra",
+        "correct": false,
+        "why": "This is a greeting: “Hello.”"
+      },
+      {
+        "id": "o2",
+        "text": "ಇದರ ಬೆಲೆ ಎಷ್ಟು?",
+        "roman": "Idara bele eṣṭu?",
+        "correct": true,
+        "why": "Correct! “ಇದರ ಬೆಲೆ ಎಷ್ಟು?” means “How much does this cost?”"
+      },
+      {
+        "id": "o3",
+        "text": "ಇಲ್ಲಿ ನಿಲ್ಲಿಸಿ, ದಯವಿಟ್ಟು",
+        "roman": "Illi nillisī, dayaviṭṭu",
+        "correct": false,
+        "why": "This means “Please stop here.” Useful in an auto or cab."
+      }
+    ]
+  },
+  {
+    "id": "s5",
+    "title": "Negotiating at the Bazaar",
+    "category": "shopping",
+    "speaker": "Fruit Seller",
+    "speaker_avatar": "🍎",
+    "question": "“ಒಂದು ಕೆ.ಜಿಗೆ ನೂರು ರೂಪಾಯಿ.” (One hundred rupees per kilo.)",
+    "context": "You feel the price is slightly steep and want to politely ask if a discount is possible.",
+    "prompt": "Which phrase politely negotiates a slight price reduction?",
+    "related_phrase_id": "p11",
+    "options": [
+      {
+        "id": "o1",
+        "text": "ಸ್ವಲ್ಪ ಕಡಿಮೆ ಮಾಡುತ್ತೀರಾ?",
+        "roman": "Svalpa kaḍime māḍuttīrā?",
+        "correct": true,
+        "why": "Courteous and effective! “ಸ್ವಲ್ಪ ಕಡಿಮೆ ಮಾಡುತ್ತೀರಾ?” asks if the price can be reduced a little."
+      },
+      {
+        "id": "o2",
+        "text": "ಖಾರ ಸ್ವಲ್ಪ ಕಡಿಮೆ ಮಾಡಿ",
+        "roman": "Khāra svalpa kaḍime māḍi",
+        "correct": false,
+        "why": "This means “Make it less spicy” for food preparations."
+      },
+      {
+        "id": "o3",
+        "text": "ಹತ್ತಿರದ ಆಸ್ಪತ್ರೆ ಎಲ್ಲಿದೆ?",
+        "roman": "Hattirada āspatre ellide?",
+        "correct": false,
+        "why": "This asks where the nearest hospital is."
+      }
+    ]
+  },
+  {
+    "id": "s6",
+    "title": "Clinic Assistance",
+    "category": "health",
+    "speaker": "Clinic Receptionist",
+    "speaker_avatar": "🏥",
+    "question": "“ಹಲೋ, ಏನು ಸಮಸ್ಯೆ?” (Hello, what seems to be the trouble?)",
+    "context": "You are feeling unwell and need to ask whether the doctor is currently available.",
+    "prompt": "Which phrase respectfully explains you are unwell and asks for the doctor?",
+    "related_phrase_id": "p18",
+    "options": [
+      {
+        "id": "o1",
+        "text": "ನನಗೆ ಹುಷಾರಿಲ್ಲ, ವೈದ್ಯರು ಇದ್ದಾರಾ?",
+        "roman": "Nanage huṣārilla, vaidyaru iddārā?",
+        "correct": true,
+        "why": "Accurate and polite! It communicates that you are unwell and asks if the doctor is in."
+      },
+      {
+        "id": "o2",
+        "text": "ಬೇರೆ ಬಣ್ಣ ಇದೆಯೇ?",
+        "roman": "Bēre baṇṇa ideyē?",
+        "correct": false,
+        "why": "This means “Do you have another colour?” used when shopping."
+      },
+      {
+        "id": "o3",
+        "text": "ಸಭೆ ಯಾವಾಗ ಪ್ರಾರಂಭವಾಗುತ್ತದೆ?",
+        "roman": "Sabhe yāvāga prārambhavāguttade?",
+        "correct": false,
+        "why": "This asks when the meeting starts in a workplace context."
+      }
+    ]
+  }
+]
+

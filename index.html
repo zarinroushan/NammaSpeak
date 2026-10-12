@@ -4,100 +4,346 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f7f3ec">
-  <title>NammaSpeak — Kannada for real life</title>
+  <meta name="description" content="NammaSpeak — Real-life everyday Kannada learning for travel, dining, shopping, transit, and healthcare.">
+  <title>NammaSpeak — Kannada for Real Life</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&family=Manrope:wght@400;500;600;700;800&family=Noto+Sans+Kannada:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Sans+Bengali:wght@400;600;700&family=Noto+Sans+Tamil:wght@400;600;700&family=Noto+Sans+Telugu:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="frontend/styles.css">
 </head>
 <body>
+
+  <!-- First-visit language onboarding modal -->
+  <div id="language-onboarding" class="language-onboarding" hidden>
+    <div class="language-panel">
+      <div class="brand-mark" aria-hidden="true">ನ</div>
+      <p class="eyebrow">NAMMASPEAK</p>
+
+      <h1 id="welcome-title" data-i18n="onboarding_title">Let's learn Kannada your way.</h1>
+
+      <p id="welcome-description" data-i18n="onboarding_description">
+        Choose the language you're most comfortable with.
+        We'll use it to explain Kannada phrases and guide your practice.
+      </p>
+
+      <label for="preferred-language" id="language-label" data-i18n="onboarding_label">
+        I am most comfortable with
+      </label>
+
+      <select id="preferred-language" aria-label="Select preferred language" data-i18n-aria-label="language_select_aria">
+        <option value="en">English</option>
+        <option value="hi">हिन्दी (Hindi)</option>
+        <option value="bn">বাংলা (Bengali)</option>
+        <option value="ta">தமிழ் (Tamil)</option>
+        <option value="te">తెలుగు (Telugu)</option>
+      </select>
+
+      <button id="save-language" type="button" data-i18n="onboarding_btn">
+        Start learning Kannada →
+      </button>
+    </div>
+  </div>
+
   <div class="app-shell">
     <header class="topbar">
-      <a class="brand" href="#" aria-label="NammaSpeak home">
-        <span class="brand-mark">ನ</span>
+      <a class="brand" href="#" aria-label="NammaSpeak Home" data-i18n-aria-label="brand_home_aria">
+        <span class="brand-mark" aria-hidden="true">ನ</span>
         <span>Namma<span class="brand-accent">Speak</span><small>KANNADA FOR REAL LIFE</small></span>
       </a>
-      <nav class="top-nav" aria-label="Main navigation">
-        <button class="nav-link active" data-view="explore">Explore</button>
-        <button class="nav-link" data-view="practice">Practice</button>
-        <button class="nav-link" data-view="saved">Saved <span id="saved-count" class="nav-count">0</span></button>
+
+      <nav class="top-nav" aria-label="Main Navigation">
+        <button class="nav-link active" data-view="explore" data-i18n="nav_explore">Explore</button>
+        <button class="nav-link" data-view="practice" data-i18n="nav_practice">Practice</button>
+        <button class="nav-link" data-view="revision"><span data-i18n="nav_revision">Revision</span> <span id="revision-count" class="nav-count">0</span></button>
+        <button class="nav-link" data-view="saved"><span data-i18n="nav_phrasebook">Phrasebook</span> <span id="saved-count" class="nav-count">0</span></button>
+        <button class="nav-link" data-view="ai" data-i18n="nav_ai">AI Partner 💬</button>
       </nav>
-      <div class="profile-chip"><span class="profile-dot">Z</span><span>My learning</span></div>
+
+      <div class="topbar-controls">
+        <!-- Multilingual Interface Language Switcher -->
+        <div class="language-picker-wrap">
+          <label for="topbar-language" class="language-picker-label" data-i18n="nav_language_label">Language:</label>
+          <select id="topbar-language" aria-label="Change Interface Language" data-i18n-aria-label="language_change_aria">
+            <option value="en">English</option>
+            <option value="hi">हिन्दी (Hindi)</option>
+            <option value="bn">বাংলা (Bengali)</option>
+            <option value="ta">தமிழ் (Tamil)</option>
+            <option value="te">తెలుగు (Telugu)</option>
+          </select>
+        </div>
+
+        <div id="backend-status" class="status-pill">
+          <span class="status-dot"></span> <span id="status-text" data-i18n="status_checking">Checking connection...</span>
+        </div>
+      </div>
     </header>
 
     <main>
+      <!-- Hero Section -->
       <section class="hero">
         <div class="hero-copy">
-          <div class="eyebrow"><span class="eyebrow-dot"></span> YOUR EVERYDAY KANNADA COMPANION</div>
-          <h1>Make yourself<br><em>understood.</em></h1>
-          <p>Useful Kannada for the moments that matter — from finding your bus to ordering your favourite dosa.</p>
+          <div class="eyebrow"><span class="eyebrow-dot"></span> <span data-i18n="hero_eyebrow">YOUR EVERYDAY KANNADA COMPANION</span></div>
+          <h1><span data-i18n="hero_h1_part1">Make yourself</span><br><em data-i18n="hero_h1_highlight">understood.</em></h1>
+          <p data-i18n="hero_p">Practical Kannada for moments that matter — from asking if a bus goes to your stop, to ordering filter coffee, bargaining at local markets, or asking for help at a clinic.</p>
           <div class="hero-actions">
-            <button class="button button-dark" id="start-practice">Start a conversation <span aria-hidden="true">↗</span></button>
-            <span class="micro-note"><span class="sparkle">✳</span> Small phrases. Real confidence.</span>
+            <button class="button button-dark" id="start-practice"><span data-i18n="hero_btn_practice">Start Conversation Practice</span> <span aria-hidden="true">↗</span></button>
+            <span class="micro-note"><span class="sparkle">✳</span> <span data-i18n="hero_sparkle_note">Small phrases. Real confidence.</span></span>
           </div>
         </div>
-        <div class="hero-art" aria-label="Illustration of a conversation card">
+
+        <div class="hero-art" aria-label="Illustration of a Kannada conversation card" data-i18n-aria-label="hero_art_aria_label">
           <div class="sun-disc"></div>
-          <div class="floating-label label-one">ನಮಸ್ಕಾರ <span>hello</span></div>
-          <div class="floating-label label-two">ಹೇಗಿದ್ದೀರಾ? <span>how are you?</span></div>
+          <div class="floating-label label-one" lang="kn">ನಮಸ್ಕಾರ <span lang="en" data-i18n="hero_label_one_meaning">namaskāra • hello</span></div>
+          <div class="floating-label label-two" lang="kn">ಹೇಗಿದ್ದೀರಾ? <span lang="en" data-i18n="hero_label_two_meaning">hēgiddīrā • how are you?</span></div>
           <div class="chat-card">
-            <div class="chat-card-top"><span class="live-dot"></span> A LITTLE KANNADA GOES A LONG WAY</div>
-            <div class="chat-kannada">ನಮಸ್ಕಾರ!</div>
+            <div class="chat-card-top"><span class="live-dot"></span> <span data-i18n="hero_card_eyebrow">A LITTLE KANNADA GOES A LONG WAY</span></div>
+            <div class="chat-kannada" lang="kn">ನಮಸ್ಕಾರ!</div>
             <div class="chat-roman">Namaskāra!</div>
-            <div class="chat-meaning">Hello / Greetings</div>
-            <div class="sound-wave"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
-            <div class="chat-foot"><span>EVERYDAY ESSENTIALS</span><button id="hero-speak" aria-label="Speak hello phrase">▶ Listen</button></div>
+            <div class="chat-meaning" data-i18n="hero_card_meaning">Hello / Universal Respectful Greeting</div>
+            <div class="sound-wave" aria-hidden="true">
+              <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+            </div>
+            <div class="chat-foot">
+              <span data-i18n="hero_card_category">EVERYDAY ESSENTIALS</span>
+              <button id="hero-speak" aria-label="Listen to greeting pronunciation" data-i18n-aria-label="hero_card_listen_aria" data-i18n="hero_card_listen">▶ Listen</button>
+            </div>
           </div>
-          <div class="art-sticker">ನಮ್ಮ<br>ನಾಡು <span>♥</span></div>
-          <div class="art-caption">Learn it. Say it. Use it.</div>
+          <div class="art-sticker"><span data-i18n="hero_art_sticker">ನಮ್ಮ ನಾಡು</span> <span>♥</span></div>
+          <div class="art-caption" data-i18n="hero_art_caption">Learn it. Say it. Use it.</div>
         </div>
       </section>
 
-      <section class="dashboard-strip" aria-label="Learning progress">
-        <div class="strip-item"><span class="strip-icon">◎</span><div><strong id="learned-count">0</strong><small>PHRASES PRACTISED</small></div></div>
-        <div class="strip-item"><span class="strip-icon">✦</span><div><strong id="streak-count">0</strong><small>CONVERSATION SCORE</small></div></div>
-        <div class="strip-item"><span class="strip-icon">♡</span><div><strong id="saved-strip-count">0</strong><small>SAVED PHRASES</small></div></div>
-        <div class="strip-message">A little practice, a little progress. <span>ಅಭ್ಯಾಸವೇ ಯಶಸ್ಸು.</span></div>
+      <!-- Real Learning Stats Strip -->
+      <section class="dashboard-strip" aria-label="Real Learning Progress">
+        <div class="strip-item">
+          <span class="strip-icon" aria-hidden="true">◎</span>
+          <div>
+            <strong id="learned-count">0</strong>
+            <small data-i18n="stats_attempted_label">QUESTIONS ATTEMPTED</small>
+          </div>
+        </div>
+        <div class="strip-item">
+          <span class="strip-icon" aria-hidden="true">✦</span>
+          <div>
+            <strong id="streak-count">0%</strong>
+            <small data-i18n="stats_accuracy_label">PRACTICE ACCURACY</small>
+          </div>
+        </div>
+        <div class="strip-item">
+          <span class="strip-icon" aria-hidden="true">♡</span>
+          <div>
+            <strong id="saved-strip-count">0</strong>
+            <small data-i18n="stats_saved_label">SAVED PHRASES</small>
+          </div>
+        </div>
+        <div class="strip-item">
+          <span class="strip-icon" aria-hidden="true">⚡</span>
+          <div>
+            <strong id="revision-strip-count">0</strong>
+            <small data-i18n="stats_revision_label">DUE FOR REVISION</small>
+          </div>
+        </div>
+        <div class="strip-message">
+          <span data-i18n="stats_tagline">Confidence grows with every real conversation.</span>
+        </div>
       </section>
 
+      <!-- 1. Explore View -->
       <section class="content-section" id="explore-view">
         <div class="section-heading">
-          <div><div class="eyebrow">FIND YOUR WORDS</div><h2>What are we doing today?</h2><p>Choose a situation and find the right thing to say.</p></div>
-          <div class="search-wrap"><span>⌕</span><input id="search-input" type="search" placeholder="Search a phrase or meaning…" aria-label="Search phrases"></div>
+          <div>
+            <div class="eyebrow" data-i18n="explore_eyebrow">FIND YOUR WORDS</div>
+            <h2 data-i18n="explore_h2">What are we doing today?</h2>
+            <p data-i18n="explore_p">Select a situation or search by Kannada text, English meaning, or transliteration.</p>
+          </div>
+          <div class="search-wrap">
+            <span aria-hidden="true">⌕</span>
+            <input id="search-input" type="search" placeholder="Search a phrase, meaning, or situation…" data-i18n-placeholder="explore_search_placeholder" aria-label="Search phrases">
+          </div>
         </div>
+
         <div class="category-grid" id="category-grid"></div>
-        <div class="phrase-heading"><h3 id="phrase-title">Everyday essentials</h3><span id="phrase-count">0 phrases</span></div>
+
+        <div class="phrase-heading">
+          <h3 id="phrase-title" data-i18n="explore_essentials_heading">Everyday essentials</h3>
+          <span id="phrase-count">0 phrases</span>
+        </div>
+
         <div class="phrase-grid" id="phrase-grid"></div>
-        <div id="empty-state" class="empty-state hidden">No phrases found. Try another search or category.</div>
+
+        <div id="empty-state" class="empty-state hidden">
+          <div data-i18n="explore_empty">No phrases match your search. Try searching by English meaning, or choose another category above.</div>
+        </div>
       </section>
 
+      <!-- 2. Practice View -->
       <section class="content-section hidden" id="practice-view">
-        <div class="section-heading practice-heading"><div><div class="eyebrow">PRACTISE IN CONTEXT</div><h2>Real life, one phrase at a time.</h2><p>Choose the most useful response for the situation.</p></div><div class="practice-badge">SCENARIO 01 <span>•</span> TRANSPORT</div></div>
+        <div class="section-heading practice-heading">
+          <div>
+            <div class="eyebrow" data-i18n="practice_eyebrow">PRACTISE IN CONTEXT</div>
+            <h2 data-i18n="practice_h2">Real life, one phrase at a time.</h2>
+            <p data-i18n="practice_p">Understand the situational prompt and choose the most effective, polite response.</p>
+          </div>
+          <div class="practice-badge" data-i18n="practice_badge">SITUATIONAL QUIZ • REAL SCENARIOS</div>
+        </div>
+
         <div class="practice-layout">
           <div class="scenario-card">
-            <div class="scenario-top"><span class="scenario-icon">🚌</span><span>AT THE BUS STOP</span><span class="scenario-step" id="scenario-step">01 / 05</span></div>
-            <div class="scenario-person"><div class="person-avatar">ಅ</div><div><strong id="speaker-name">Bus conductor</strong><small>speaks to you in Kannada</small></div><button id="scenario-speak" class="round-button" aria-label="Hear question">▶</button></div>
-            <div class="scenario-question" id="scenario-question">“Where do you want to go?”</div>
-            <div class="scenario-context" id="scenario-context">You need to ask whether this bus goes to the city centre.</div>
+            <div class="scenario-top">
+              <span class="scenario-icon">🚌</span>
+              <span data-i18n="practice_scenario_top">SCENARIO DIALOGUE</span>
+              <span class="scenario-step" id="scenario-step">01 / 06</span>
+            </div>
+            
+            <div class="scenario-person">
+              <div class="person-avatar" aria-hidden="true">ಅ</div>
+              <div>
+                <strong id="speaker-name">Bus conductor</strong>
+                <small id="speaker-role" data-i18n="practice_speaker_role">speaks to you in Kannada</small>
+              </div>
+              <button id="scenario-speak" class="round-button" aria-label="Hear scenario prompt">▶</button>
+            </div>
+
+            <div class="scenario-question" id="scenario-question" lang="kn">“ಯಾವ ಊರಿಗೆ ಹೋಗ್ಬೇಕು?”</div>
+            <div class="scenario-context" id="scenario-context">You are at the bus terminal and need to confirm if this bus is heading to Mysuru.</div>
+
             <div class="scenario-divider"></div>
-            <div class="answer-label">CHOOSE YOUR RESPONSE</div>
+
+            <div class="answer-label" data-i18n="practice_choose_response">CHOOSE YOUR RESPONSE</div>
             <div id="answer-options" class="answer-options"></div>
+
             <div id="answer-feedback" class="answer-feedback hidden" role="status"></div>
-            <div class="scenario-controls"><span id="quiz-progress">Question 1 of 5</span><button id="next-question" class="button button-dark" disabled>Next question →</button></div>
+
+            <div class="scenario-controls">
+              <span id="quiz-progress">Question 1 of 6</span>
+              <button id="next-question" class="button button-dark" disabled data-i18n="practice_next_btn">Next question →</button>
+            </div>
           </div>
-          <aside class="practice-aside"><div class="aside-illustration">ನಮಸ್ಕಾರ<span>✳</span></div><h3>Confidence comes from practice.</h3><p>Wrong answers are part of learning. We'll explain the context and bring tricky phrases back for revision.</p><div class="mini-stat"><span>YOUR BEST</span><strong id="best-score">0%</strong></div><div class="mini-stat"><span>QUESTIONS ANSWERED</span><strong id="questions-answered">0</strong></div></aside>
+
+          <aside class="practice-aside">
+            <div class="aside-illustration">ನಮಸ್ಕಾರ<span>✳</span></div>
+            <h3 data-i18n="practice_aside_h3">Mistakes lead to mastery.</h3>
+            <p data-i18n="practice_aside_p">Every response includes clear explanations of why it works or which context it actually belongs to. Missed phrases are automatically added to your Adaptive Revision queue.</p>
+            <div class="mini-stat">
+              <span data-i18n="practice_aside_best_score">YOUR BEST SCORE</span>
+              <strong id="best-score">0%</strong>
+            </div>
+            <div class="mini-stat">
+              <span data-i18n="practice_aside_answered">QUESTIONS ANSWERED</span>
+              <strong id="questions-answered">0</strong>
+            </div>
+          </aside>
         </div>
       </section>
 
+      <!-- 3. Adaptive Revision View -->
+      <section class="content-section hidden" id="revision-view">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow" data-i18n="revision_eyebrow">ADAPTIVE REVISION</div>
+            <h2 data-i18n="revision_h2">Focus on your tricky phrases.</h2>
+            <p data-i18n="revision_p">Phrases you struggled with during conversation practice are prioritized here until you feel confident.</p>
+          </div>
+        </div>
+
+        <div id="revision-grid" class="phrase-grid"></div>
+
+        <div id="revision-empty" class="empty-state" data-i18n="revision_empty">
+          🎉 Fantastic! You have no tricky phrases pending revision. Take on a practice scenario round to test your recall!
+        </div>
+      </section>
+
+      <!-- 4. Phrasebook (Saved) View -->
       <section class="content-section hidden" id="saved-view">
-        <div class="section-heading"><div><div class="eyebrow">YOUR PERSONAL PHRASEBOOK</div><h2>Keep the words close.</h2><p>Your saved phrases stay on this device.</p></div></div>
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow" data-i18n="saved_eyebrow">YOUR PERSONAL PHRASEBOOK</div>
+            <h2 data-i18n="saved_h2">Keep the words close.</h2>
+            <p data-i18n="saved_p">Phrases you save are persistently stored in your database for quick offline recall.</p>
+          </div>
+        </div>
+
         <div id="saved-grid" class="phrase-grid"></div>
-        <div id="saved-empty" class="empty-state">You haven't saved any phrases yet. Explore and tap the heart on a phrase you want to remember.</div>
+
+        <div id="saved-empty" class="empty-state" data-i18n="saved_empty">
+          You haven't saved any phrases yet. Click the heart (♥) on any phrase card in the Explore view to keep it here.
+        </div>
+      </section>
+
+      <!-- 5. AI Conversation Companion View -->
+      <section class="content-section hidden" id="ai-view">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow" data-i18n="ai_eyebrow">CONVERSATION COMPANION</div>
+            <h2 data-i18n="ai_h2">Simulate a real conversation.</h2>
+            <p data-i18n="ai_p">Practice Kannada exchanges for everyday situations. Powered by your configured AI provider or our deterministic local engine.</p>
+          </div>
+        </div>
+
+        <div class="ai-layout">
+          <div class="ai-card">
+            <div class="ai-header">
+              <label for="ai-context-selector"><strong data-i18n="ai_context_label">Scenario Context:</strong></label>
+              <select id="ai-context-selector" aria-label="Select conversation scenario" data-i18n-aria-label="ai_context_aria">
+                <option value="At a BMTC Bus Stop / Metro Station asking for routes" data-i18n="ai_context_bus">At the Bus / Metro Station</option>
+                <option value="Ordering filter coffee and snacks at a local Darshini" data-i18n="ai_context_food">Ordering Food at Darshini / Café</option>
+                <option value="Bargaining politely for vegetables and flowers in a market" data-i18n="ai_context_market">Shopping at Local Market / Bazaar</option>
+                <option value="Seeking communication assistance at a local clinic or pharmacy" data-i18n="ai_context_clinic">Clinic / Pharmacy Assistance</option>
+                <option value="Asking friendly directions to a landmark on the street" data-i18n="ai_context_directions">Asking for Directions on the Street</option>
+                <option value="Everyday greetings with neighbors and colleagues" data-i18n="ai_context_greetings">Everyday Friendly Greetings</option>
+              </select>
+            </div>
+
+            <div class="chat-history" id="ai-chat-history">
+              <div class="chat-bubble ai-bubble">
+                <div class="bubble-sender">
+                  <span data-i18n="ai_companion_label">NammaSpeak Companion</span>
+                  <button class="bubble-speak-btn" aria-label="Listen to greeting" data-i18n-aria-label="ai_greeting_listen_aria">▶</button>
+                </div>
+                <div class="bubble-kannada" lang="kn">ನಮಸ್ಕಾರ! ನಿಮಗೆ ಕನ್ನಡದಲ್ಲಿ ಏನು ಕಲಿಯಬೇಕು?</div>
+                <div class="bubble-roman">Namaskāra! Nimage Kannaḍadalli ēnu kaliyabēku?</div>
+                <div class="bubble-meaning" data-i18n="ai_greeting_meaning">Greetings! What would you like to practice in Kannada today?</div>
+                <div class="bubble-tip">💡 <span data-i18n="ai_greeting_tip">Try asking: 'How do I order coffee?' or 'Which bus goes to Mysuru?'</span></div>
+              </div>
+            </div>
+
+            <div class="chat-input-bar">
+              <input type="text" id="ai-chat-input" placeholder="Type in your language, English, or transliteration (e.g. 'How do I order dosa?')..." data-i18n-placeholder="ai_input_placeholder" aria-label="Conversation message input" data-i18n-aria-label="ai_input_aria">
+              <button class="button button-dark" id="ai-chat-send" data-i18n="ai_send_btn">Send ↗</button>
+            </div>
+
+            <div class="health-disclaimer-box" data-i18n="ai_disclaimer_notice">
+              ⚠️ <strong>Important Notice:</strong> For healthcare and medical situations, NammaSpeak provides communication assistance only. It does not provide medical diagnoses or treatment recommendations. In emergencies, please dial <strong>108</strong> (Ambulance) or <strong>112</strong> (National Emergency).
+            </div>
+          </div>
+        </div>
       </section>
     </main>
-    <footer><a class="brand footer-brand" href="#"><span class="brand-mark">ನ</span><span>Namma<span class="brand-accent">Speak</span></span></a><span>Built with care for everyday connection.</span><span class="footer-kannada">ಕನ್ನಡ ಕಲಿಯೋಣ ♡</span></footer>
+
+    <footer>
+      <a class="brand footer-brand" href="#">
+        <span class="brand-mark" aria-hidden="true">ನ</span>
+        <span>Namma<span class="brand-accent">Speak</span></span>
+      </a>
+      <span class="footer-kannada" data-i18n="footer_tagline">ಕನ್ನಡ ಕಲಿಯೋಣ ♡</span>
+    </footer>
   </div>
+
+  <!-- In-depth Context Modal Dialog -->
+  <div id="explain-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="explain-modal-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="explain-modal-title" data-i18n="modal_title">Phrase Context & Etiquette</h3>
+        <button id="explain-modal-close" class="modal-close-btn" aria-label="Close dialog" data-i18n-aria-label="modal_close_aria">×</button>
+      </div>
+      <div id="explain-modal-body"></div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
-  <script src="app.js"></script>
+
+  <!-- Main JavaScript Module -->
+  <script type="module" src="frontend/app.js"></script>
 </body>
 </html>

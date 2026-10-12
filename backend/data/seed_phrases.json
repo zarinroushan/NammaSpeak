@@ -1,0 +1,245 @@
+[
+  {
+    "id": "p1",
+    "category": "help",
+    "kn": "ನಮಸ್ಕಾರ",
+    "roman": "Namaskāra",
+    "meaning": "Hello / Greetings",
+    "context": "A universal, respectful greeting suitable for any time of day and any audience.",
+    "tag": "ESSENTIAL",
+    "formality": "Universal & Respectful",
+    "speech": "ನಮಸ್ಕಾರ"
+  },
+  {
+    "id": "p2",
+    "category": "help",
+    "kn": "ಧನ್ಯವಾದಗಳು",
+    "roman": "Dhanyavādagaḷu",
+    "meaning": "Thank you",
+    "context": "Expresses genuine gratitude. Widely appreciated in all everyday interactions.",
+    "tag": "POLITE",
+    "formality": "Polite",
+    "speech": "ಧನ್ಯವಾದಗಳು"
+  },
+  {
+    "id": "p3",
+    "category": "transport",
+    "kn": "ಈ ಬಸ್ ಮೈಸೂರುಗೆ ಹೋಗುತ್ತದೆಯೇ?",
+    "roman": "Ī bas Mysūrige hōguttadeyē?",
+    "meaning": "Does this bus go to Mysuru?",
+    "context": "Crucial before boarding an intercity or local bus to confirm the destination.",
+    "tag": "TRANSPORT",
+    "formality": "Polite question",
+    "speech": "ಈ ಬಸ್ ಮೈಸೂರುಗೆ ಹೋಗುತ್ತದೆಯೇ"
+  },
+  {
+    "id": "p4",
+    "category": "transport",
+    "kn": "ಬಸ್ ನಿಲ್ದಾಣ ಎಲ್ಲಿದೆ?",
+    "roman": "Bas nildāṇa ellide?",
+    "meaning": "Where is the bus stop / station?",
+    "context": "Use when asking pedestrians or shopkeepers for the location of the nearest bus stand.",
+    "tag": "DIRECTIONS",
+    "formality": "Direct & Polite",
+    "speech": "ಬಸ್ ನಿಲ್ದಾಣ ಎಲ್ಲಿದೆ"
+  },
+  {
+    "id": "p5",
+    "category": "transport",
+    "kn": "ಇಲ್ಲಿ ನಿಲ್ಲಿಸಿ, ದಯವಿಟ್ಟು",
+    "roman": "Illi nillisī, dayaviṭṭu",
+    "meaning": "Please stop here",
+    "context": "Polite phrase to tell an auto or bus driver when you have reached your drop point.",
+    "tag": "TRANSPORT",
+    "formality": "Polite request",
+    "speech": "ಇಲ್ಲಿ ನಿಲ್ಲಿಸಿ ದಯವಿಟ್ಟು"
+  },
+  {
+    "id": "p6",
+    "category": "transport",
+    "kn": "ಮೆಟ್ರೋ ನಿಲ್ದಾಣಕ್ಕೆ ಹೇಗೆ ಹೋಗಬೇಕು?",
+    "roman": "Metro nildāṇakke hēge hōgabēku?",
+    "meaning": "How do I get to the Metro station?",
+    "context": "Ask passersby when navigating city transit hubs and connections.",
+    "tag": "DIRECTIONS",
+    "formality": "Polite inquiry",
+    "speech": "ಮೆಟ್ರೋ ನಿಲ್ದಾಣಕ್ಕೆ ಹೇಗೆ ಹೋಗಬೇಕು"
+  },
+  {
+    "id": "p7",
+    "category": "food",
+    "kn": "ಒಂದು ಬಿಸಿ ಫಿಲ್ಟರ್ ಕಾಫಿ ಕೊಡಿ",
+    "roman": "Ondu bisi philtar kāphi koḍi",
+    "meaning": "Please give me one hot filter coffee",
+    "context": "Standard darshini and restaurant order across Karnataka.",
+    "tag": "FOOD",
+    "formality": "Friendly & Clear",
+    "speech": "ಒಂದು ಬಿಸಿ ಫಿಲ್ಟರ್ ಕಾಫಿ ಕೊಡಿ"
+  },
+  {
+    "id": "p8",
+    "category": "food",
+    "kn": "ಇದರ ಬೆಲೆ ಎಷ್ಟು?",
+    "roman": "Idara bele eṣṭu?",
+    "meaning": "How much does this cost?",
+    "context": "Versatile question used at cafés, food counters, grocery stores, and street markets.",
+    "tag": "ORDERING",
+    "formality": "Direct inquiry",
+    "speech": "ಇದರ ಬೆಲೆ ಎಷ್ಟು"
+  },
+  {
+    "id": "p9",
+    "category": "food",
+    "kn": "ನೀರು ಕೊಡಿ, ದಯವಿಟ್ಟು",
+    "roman": "Nīru koḍi, dayaviṭṭu",
+    "meaning": "Water, please",
+    "context": "Essential restaurant request when sitting down for a meal.",
+    "tag": "ESSENTIAL",
+    "formality": "Polite request",
+    "speech": "ನೀರು ಕೊಡಿ ದಯವಿಟ್ಟು"
+  },
+  {
+    "id": "p10",
+    "category": "food",
+    "kn": "ಖಾರ ಸ್ವಲ್ಪ ಕಡಿಮೆ ಮಾಡಿ",
+    "roman": "Khāra svalpa kaḍime māḍi",
+    "meaning": "Please make it less spicy",
+    "context": "Very useful when ordering street food, dosa, or curries to suit your spice tolerance.",
+    "tag": "FOOD",
+    "formality": "Polite request",
+    "speech": "ಖಾರ ಸ್ವಲ್ಪ ಕಡಿಮೆ ಮಾಡಿ"
+  },
+  {
+    "id": "p11",
+    "category": "shopping",
+    "kn": "ಸ್ವಲ್ಪ ಕಡಿಮೆ ಮಾಡುತ್ತೀರಾ?",
+    "roman": "Svalpa kaḍime māḍuttīrā?",
+    "meaning": "Could you reduce the price a little?",
+    "context": "Courteous way to negotiate at local markets without sounding aggressive.",
+    "tag": "SHOPPING",
+    "formality": "Respectful negotiation",
+    "speech": "ಸ್ವಲ್ಪ ಕಡಿಮೆ ಮಾಡುತ್ತೀರಾ"
+  },
+  {
+    "id": "p12",
+    "category": "shopping",
+    "kn": "ನನಗೆ ಇದು ಬೇಕು",
+    "roman": "Nanage idu bēku",
+    "meaning": "I want this",
+    "context": "Point to an item in a display or shop window to indicate your selection.",
+    "tag": "SHOPPING",
+    "formality": "Clear & Direct",
+    "speech": "ನನಗೆ ಇದು ಬೇಕು"
+  },
+  {
+    "id": "p13",
+    "category": "shopping",
+    "kn": "ಬೇರೆ ಬಣ್ಣ ಇದೆಯೇ?",
+    "roman": "Bēre baṇṇa ideyē?",
+    "meaning": "Do you have another colour?",
+    "context": "Useful when shopping for clothing, handicrafts, or household goods.",
+    "tag": "SHOPPING",
+    "formality": "Casual inquiry",
+    "speech": "ಬೇರೆ ಬಣ್ಣ ಇದೆಯೇ"
+  },
+  {
+    "id": "p14",
+    "category": "help",
+    "kn": "ದಯವಿಟ್ಟು ಸಹಾಯ ಮಾಡಿ",
+    "roman": "Dayaviṭṭu sahāya māḍi",
+    "meaning": "Please help me",
+    "context": "Clear request for assistance when you are lost, confused, or need general help.",
+    "tag": "HELP",
+    "formality": "Polite appeal",
+    "speech": "ದಯವಿಟ್ಟು ಸಹಾಯ ಮಾಡಿ"
+  },
+  {
+    "id": "p15",
+    "category": "help",
+    "kn": "ನನಗೆ ಕನ್ನಡ ಸ್ವಲ್ಪ ಬರುತ್ತದೆ",
+    "roman": "Nanage Kannaḍa svalpa baruttade",
+    "meaning": "I know a little Kannada",
+    "context": "Builds immediate warmth with locals while setting an honest learning expectation.",
+    "tag": "LEARNING",
+    "formality": "Warm & Friendly",
+    "speech": "ನನಗೆ ಕನ್ನಡ ಸ್ವಲ್ಪ ಬರುತ್ತದೆ"
+  },
+  {
+    "id": "p16",
+    "category": "help",
+    "kn": "ಮತ್ತೊಮ್ಮೆ ಹೇಳಿ",
+    "roman": "Mattomme hēḷi",
+    "meaning": "Please say that once again",
+    "context": "Use when someone speaks too quickly or you missed a direction.",
+    "tag": "COMMUNICATION",
+    "formality": "Polite request",
+    "speech": "ಮತ್ತೊಮ್ಮೆ ಹೇಳಿ"
+  },
+  {
+    "id": "p17",
+    "category": "health",
+    "kn": "ಹತ್ತಿರದ ಆಸ್ಪತ್ರೆ ಎಲ್ಲಿದೆ?",
+    "roman": "Hattirada āspatre ellide?",
+    "meaning": "Where is the nearest hospital?",
+    "context": "Urgent navigation aid for emergency care or medical assistance.",
+    "tag": "EMERGENCY",
+    "formality": "Direct inquiry",
+    "speech": "ಹತ್ತಿರದ ಆಸ್ಪತ್ರೆ ಎಲ್ಲಿದೆ"
+  },
+  {
+    "id": "p18",
+    "category": "health",
+    "kn": "ನನಗೆ ಹುಷಾರಿಲ್ಲ, ವೈದ್ಯರು ಇದ್ದಾರಾ?",
+    "roman": "Nanage huṣārilla, vaidyaru iddārā?",
+    "meaning": "I am not well, is the doctor available?",
+    "context": "Useful at a local clinic, primary health centre, or pharmacy reception.",
+    "tag": "HEALTH",
+    "formality": "Respectful",
+    "speech": "ನನಗೆ ಹುಷಾರಿಲ್ಲ ವೈದ್ಯರು ಇದ್ದಾರಾ"
+  },
+  {
+    "id": "p19",
+    "category": "health",
+    "kn": "ಔಷಧಿ ಅಂಗಡಿ ಎಲ್ಲಿದೆ?",
+    "roman": "Auṣadhi aṅgaḍi ellide?",
+    "meaning": "Where is the pharmacy / medical store?",
+    "context": "Locating a medical shop to purchase essential medicines or first-aid supplies.",
+    "tag": "HEALTH",
+    "formality": "Direct inquiry",
+    "speech": "ಔಷಧಿ ಅಂಗಡಿ ಎಲ್ಲಿದೆ"
+  },
+  {
+    "id": "p20",
+    "category": "work",
+    "kn": "ಶುಭ ಮುಂಜಾನೆ",
+    "roman": "Śubha munjāne",
+    "meaning": "Good morning",
+    "context": "Professional or pleasant morning greeting for colleagues and teachers.",
+    "tag": "WORKPLACE",
+    "formality": "Formal & Courteous",
+    "speech": "ಶುಭ ಮುಂಜಾನೆ"
+  },
+  {
+    "id": "p21",
+    "category": "work",
+    "kn": "ಸಭೆ ಯಾವಾಗ ಪ್ರಾರಂಭವಾಗುತ್ತದೆ?",
+    "roman": "Sabhe yāvāga prārambhavāguttade?",
+    "meaning": "When does the meeting start?",
+    "context": "Office or college question to confirm timetable and schedules.",
+    "tag": "WORKPLACE",
+    "formality": "Professional",
+    "speech": "ಸಭೆ ಯಾವಾಗ ಪ್ರಾರಂಭವಾಗುತ್ತದೆ"
+  },
+  {
+    "id": "p22",
+    "category": "work",
+    "kn": "ನಿಮ್ಮ ಅಭಿಪ್ರಾಯ ಏನು?",
+    "roman": "Nimma abhiprāya ēnu?",
+    "meaning": "What is your opinion / thought?",
+    "context": "Encourages collaborative discussion during team meetings or group projects.",
+    "tag": "DISCUSSION",
+    "formality": "Respectful & Inclusive",
+    "speech": "ನಿಮ್ಮ ಅಭಿಪ್ರಾಯ ಏನು"
+  }
+]
+
