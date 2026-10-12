@@ -22,10 +22,13 @@ class Config:
     SECRET_KEY = os.getenv("SECRET_KEY", "nammaspeak-dev-secret-key-change-in-prod")
     DEBUG = os.getenv("FLASK_DEBUG", "False").lower() in ("true", "1", "t")
     PORT = int(os.getenv("FLASK_PORT", 5000))
+    SESSION_COOKIE_SECURE = os.getenv("SESSION_COOKIE_SECURE", "False").lower() in ("true", "1", "t")
 
     # Database
     INSTANCE_DIR = BASE_DIR / "instance"
     INSTANCE_DIR.mkdir(parents=True, exist_ok=True)
+    DATABASE_URL = os.getenv("DATABASE_URL", "").strip()
+    # Retained only so the explicit legacy exporter can locate the old file.
     DATABASE_PATH = os.getenv("DATABASE_PATH", str(INSTANCE_DIR / "nammaspeak.db"))
 
     # AI Configuration

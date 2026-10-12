@@ -114,9 +114,12 @@ class TranslationService:
             with conn:
                 for key, text in translations.items():
                     conn.execute("""
-                        INSERT OR REPLACE INTO translation_cache 
+                        INSERT INTO translation_cache
                         (source_version, target_lang, translation_key, translated_text, created_at)
                         VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)
+                        ON CONFLICT (source_version, target_lang, translation_key)
+                        DO UPDATE SET translated_text = EXCLUDED.translated_text,
+                                      created_at = EXCLUDED.created_at
                     """, (self.source_version, target_lang, key, text))
         finally:
             conn.close()
@@ -339,8 +342,11 @@ Items:
                             for item in parsed:
                                 if isinstance(item, dict) and "id" in item and "meaning" in item and "context" in item:
                                     conn.execute("""
-                                        INSERT OR REPLACE INTO phrase_translations (phrase_id, target_lang, meaning, context)
+                                        INSERT INTO phrase_translations (phrase_id, target_lang, meaning, context)
                                         VALUES (?, ?, ?, ?)
+                                        ON CONFLICT (phrase_id, target_lang)
+                                        DO UPDATE SET meaning = EXCLUDED.meaning,
+                                                      context = EXCLUDED.context
                                     """, (item["id"], target_lang, str(item["meaning"]), str(item["context"])))
                     finally:
                         conn.close()
@@ -417,8 +423,11 @@ Items:
                 with conn:
                     for pid, data in lang_offline.items():
                         conn.execute("""
-                            INSERT OR REPLACE INTO phrase_translations (phrase_id, target_lang, meaning, context)
+                            INSERT INTO phrase_translations (phrase_id, target_lang, meaning, context)
                             VALUES (?, ?, ?, ?)
+                            ON CONFLICT (phrase_id, target_lang)
+                            DO UPDATE SET meaning = EXCLUDED.meaning,
+                                          context = EXCLUDED.context
                         """, (pid, target_lang, data["meaning"], data["context"]))
             finally:
                 conn.close()

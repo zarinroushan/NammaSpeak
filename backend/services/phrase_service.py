@@ -32,7 +32,7 @@ def list_categories(lang="en"):
     return localized_cats
 
 
-def get_phrases(category="all", search="", lang="en"):
+def get_phrases(category="all", search="", lang="en", user_id="default"):
     from backend.services.translation_service import translation_service
     conn = get_db_connection()
     try:
@@ -53,7 +53,7 @@ def get_phrases(category="all", search="", lang="en"):
         rows = cursor.fetchall()
         
         # Get list of saved phrase IDs to annotate response
-        saved_cursor = conn.execute("SELECT phrase_id FROM saved_phrases")
+        saved_cursor = conn.execute("SELECT phrase_id FROM saved_phrases WHERE user_id = ?", (user_id,))
         saved_set = {r["phrase_id"] for r in saved_cursor.fetchall()}
 
         result = []
@@ -71,7 +71,7 @@ def get_phrases(category="all", search="", lang="en"):
         conn.close()
 
 
-def get_phrase_by_id(phrase_id, lang="en"):
+def get_phrase_by_id(phrase_id, lang="en", user_id="default"):
     from backend.services.translation_service import translation_service
     conn = get_db_connection()
     try:
@@ -80,7 +80,7 @@ def get_phrase_by_id(phrase_id, lang="en"):
         if not row:
             return None
         p = dict(row)
-        saved = conn.execute("SELECT 1 FROM saved_phrases WHERE phrase_id = ?", (phrase_id,)).fetchone()
+        saved = conn.execute("SELECT 1 FROM saved_phrases WHERE user_id = ? AND phrase_id = ?", (user_id, phrase_id)).fetchone()
         p["is_saved"] = bool(saved)
 
         if lang and lang != "en":
@@ -93,7 +93,7 @@ def get_phrase_by_id(phrase_id, lang="en"):
         conn.close()
 
 
-def get_saved_phrases(lang="en"):
+def get_saved_phrases(lang="en", user_id="default"):
     from backend.services.translation_service import translation_service
     conn = get_db_connection()
     try:
@@ -101,8 +101,9 @@ def get_saved_phrases(lang="en"):
             SELECT p.*, s.saved_at 
             FROM phrases p
             JOIN saved_phrases s ON p.id = s.phrase_id
+            WHERE s.user_id = ?
             ORDER BY s.saved_at DESC
-        """)
+        """, (user_id,))
         rows = cursor.fetchall()
         result = []
         for r in rows:
@@ -118,7 +119,7 @@ def get_saved_phrases(lang="en"):
         conn.close()
 
 
-def save_phrase(phrase_id):
+def save_phrase(phrase_id, user_id="default"):
     conn = get_db_connection()
     try:
         phrase = conn.execute("SELECT id FROM phrases WHERE id = ?", (phrase_id,))
@@ -127,19 +128,19 @@ def save_phrase(phrase_id):
 
         with conn:
             conn.execute("""
-                INSERT OR IGNORE INTO saved_phrases (phrase_id)
-                VALUES (?)
-            """, (phrase_id,))
+                INSERT OR IGNORE INTO saved_phrases (user_id, phrase_id)
+                VALUES (?, ?)
+            """, (user_id, phrase_id))
         return True, "Phrase saved successfully"
     finally:
         conn.close()
 
 
-def unsave_phrase(phrase_id):
+def unsave_phrase(phrase_id, user_id="default"):
     conn = get_db_connection()
     try:
         with conn:
-            cursor = conn.execute("DELETE FROM saved_phrases WHERE phrase_id = ?", (phrase_id,))
+            cursor = conn.execute("DELETE FROM saved_phrases WHERE user_id = ? AND phrase_id = ?", (user_id, phrase_id))
             if cursor.rowcount == 0:
                 return False, "Phrase was not in phrasebook"
         return True, "Phrase removed from phrasebook"

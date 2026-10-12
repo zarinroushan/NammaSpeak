@@ -13,38 +13,191 @@
 </head>
 <body>
 
-  <!-- First-visit language onboarding modal -->
-  <div id="language-onboarding" class="language-onboarding" hidden>
-    <div class="language-panel">
-      <div class="brand-mark" aria-hidden="true">ನ</div>
-      <p class="eyebrow">NAMMASPEAK</p>
+  <!-- 1. Full-Page Welcome Screen -->
+  <section class="auth-page-screen" id="welcome-view" hidden>
+    <div class="auth-card">
+      <div class="auth-brand-row">
+        <div class="brand-mark" aria-hidden="true">ನ</div>
+        <div class="auth-brand-text">
+          <span class="auth-brand-name">Namma<span class="brand-accent">Speak</span></span>
+          <span class="auth-brand-tagline">KANNADA FOR REAL LIFE</span>
+        </div>
+      </div>
 
-      <h1 id="welcome-title" data-i18n="onboarding_title">Let's learn Kannada your way.</h1>
+      <h1 class="auth-title">Learn Kannada for real life.</h1>
+      <p class="auth-desc">
+        Start speaking practical everyday Kannada for travel, dining, transit, markets, and healthcare.
+      </p>
 
-      <p id="welcome-description" data-i18n="onboarding_description">
+      <div class="auth-actions-stack">
+        <button id="continue-guest" class="button button-dark button-lg" type="button">
+          Continue as Guest →
+        </button>
+        <button id="show-sign-in" class="button button-outline button-lg" type="button">
+          Sign in
+        </button>
+        <button id="show-register" class="button button-outline button-lg" type="button">
+          Create account
+        </button>
+      </div>
+
+      <p class="auth-footnote">
+        Guest progress is saved on this device. You can create an account anytime to sync across devices.
+      </p>
+    </div>
+  </section>
+
+  <!-- 2. Full-Page Sign In Screen -->
+  <section class="auth-page-screen" id="signin-view" hidden>
+    <div class="auth-card">
+      <button class="auth-back-link" id="signin-back-btn" type="button">
+        ← Back to Welcome
+      </button>
+
+      <div class="auth-brand-row">
+        <div class="brand-mark" aria-hidden="true">ನ</div>
+        <div class="auth-brand-text">
+          <span class="auth-brand-name">Namma<span class="brand-accent">Speak</span></span>
+        </div>
+      </div>
+
+      <h1 class="auth-title">Sign in</h1>
+      <p class="auth-desc">
+        Welcome back! Enter your email and password to access your learning progress.
+      </p>
+
+      <form id="sign-in-form" class="auth-form" novalidate>
+        <div class="auth-field">
+          <label for="sign-in-email">Email address</label>
+          <input id="sign-in-email" type="email" autocomplete="email" placeholder="name@example.com" required>
+        </div>
+
+        <div class="auth-field">
+          <label for="sign-in-password">Password</label>
+          <input id="sign-in-password" type="password" autocomplete="current-password" placeholder="Your password" required>
+        </div>
+
+        <button class="button button-dark button-lg" id="sign-in-submit-btn" type="submit">
+          Sign in
+        </button>
+
+        <p id="sign-in-error" class="form-error" role="alert" aria-live="polite"></p>
+      </form>
+
+      <div class="auth-switch-row">
+        <span>Don't have an account?</span>
+        <button class="auth-inline-link" id="signin-to-register-btn" type="button">
+          Create account
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Full-Page Registration Screen -->
+  <section class="auth-page-screen" id="register-view" hidden>
+    <div class="auth-card">
+      <button class="auth-back-link" id="register-back-btn" type="button">
+        ← Back to Welcome
+      </button>
+
+      <div class="auth-brand-row">
+        <div class="brand-mark" aria-hidden="true">ನ</div>
+        <div class="auth-brand-text">
+          <span class="auth-brand-name">Namma<span class="brand-accent">Speak</span></span>
+        </div>
+      </div>
+
+      <h1 class="auth-title">Create your account</h1>
+      <p class="auth-desc">
+        Save your favorite phrases, practice stats, and streaks across all your devices.
+      </p>
+
+      <div id="register-guest-merge-banner" class="guest-merge-notice" hidden>
+        ✨ <strong>Guest progress detected!</strong> Your saved phrases and quiz scores will be automatically transferred to your new account.
+      </div>
+
+      <form id="register-form" class="auth-form" novalidate>
+        <div class="auth-field">
+          <label for="register-name">Full name</label>
+          <input id="register-name" type="text" autocomplete="name" placeholder="Your name" required maxlength="80">
+        </div>
+
+        <div class="auth-field">
+          <label for="register-email">Email address</label>
+          <input id="register-email" type="email" autocomplete="email" placeholder="name@example.com" required maxlength="254">
+        </div>
+
+        <div class="auth-field">
+          <label for="register-password">Password (8+ characters)</label>
+          <input id="register-password" type="password" autocomplete="new-password" placeholder="At least 8 characters" required minlength="8">
+        </div>
+
+        <div class="auth-field">
+          <label for="register-language">Preferred interface language</label>
+          <select id="register-language" aria-label="Preferred interface language">
+            <option value="en">English</option>
+            <option value="hi">हिन्दी (Hindi)</option>
+            <option value="bn">বাংলা (Bengali)</option>
+            <option value="ta">தமிழ் (Tamil)</option>
+            <option value="te">తెలుగు (Telugu)</option>
+          </select>
+        </div>
+
+        <button class="button button-dark button-lg" id="register-submit-btn" type="submit">
+          Create account & Start Learning →
+        </button>
+
+        <p id="register-error" class="form-error" role="alert" aria-live="polite"></p>
+      </form>
+
+      <div class="auth-switch-row">
+        <span>Already have an account?</span>
+        <button class="auth-inline-link" id="register-to-signin-btn" type="button">
+          Sign in
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Full-Page Language Selection Screen -->
+  <section class="auth-page-screen" id="language-view" hidden>
+    <div class="auth-card">
+      <div class="auth-brand-row">
+        <div class="brand-mark" aria-hidden="true">ನ</div>
+        <div class="auth-brand-text">
+          <span class="auth-brand-name">Namma<span class="brand-accent">Speak</span></span>
+        </div>
+      </div>
+
+      <h1 id="welcome-title" class="auth-title" data-i18n="onboarding_title">Let's learn Kannada your way.</h1>
+
+      <p id="welcome-description" class="auth-desc" data-i18n="onboarding_description">
         Choose the language you're most comfortable with.
         We'll use it to explain Kannada phrases and guide your practice.
       </p>
 
-      <label for="preferred-language" id="language-label" data-i18n="onboarding_label">
-        I am most comfortable with
-      </label>
+      <div class="auth-field">
+        <label for="preferred-language" id="language-label" data-i18n="onboarding_label">
+          I am most comfortable with
+        </label>
+        <select id="preferred-language" aria-label="Select preferred language" data-i18n-aria-label="language_select_aria">
+          <option value="en">English</option>
+          <option value="hi">हिन्दी (Hindi)</option>
+          <option value="bn">বাংলা (Bengali)</option>
+          <option value="ta">தமிழ் (Tamil)</option>
+          <option value="te">తెలుగు (Telugu)</option>
+        </select>
+      </div>
 
-      <select id="preferred-language" aria-label="Select preferred language" data-i18n-aria-label="language_select_aria">
-        <option value="en">English</option>
-        <option value="hi">हिन्दी (Hindi)</option>
-        <option value="bn">বাংলা (Bengali)</option>
-        <option value="ta">தமிழ் (Tamil)</option>
-        <option value="te">తెలుగు (Telugu)</option>
-      </select>
-
-      <button id="save-language" type="button" data-i18n="onboarding_btn">
-        Start learning Kannada →
-      </button>
+      <div class="auth-actions-stack">
+        <button id="save-language" class="button button-dark button-lg" type="button" data-i18n="onboarding_btn">
+          Start learning Kannada →
+        </button>
+      </div>
     </div>
-  </div>
+  </section>
 
-  <div class="app-shell">
+  <div class="app-shell" id="app-shell" hidden>
     <header class="topbar">
       <a class="brand" href="#" aria-label="NammaSpeak Home" data-i18n-aria-label="brand_home_aria">
         <span class="brand-mark" aria-hidden="true">ನ</span>
@@ -57,6 +210,7 @@
         <button class="nav-link" data-view="revision"><span data-i18n="nav_revision">Revision</span> <span id="revision-count" class="nav-count">0</span></button>
         <button class="nav-link" data-view="saved"><span data-i18n="nav_phrasebook">Phrasebook</span> <span id="saved-count" class="nav-count">0</span></button>
         <button class="nav-link" data-view="ai" data-i18n="nav_ai">AI Partner 💬</button>
+        <button class="nav-link" data-view="account" id="nav-account-link"><span data-i18n="nav_account">Account</span> <span id="nav-account-type-badge" class="nav-count">Guest</span></button>
       </nav>
 
       <div class="topbar-controls">
@@ -75,6 +229,13 @@
         <div id="backend-status" class="status-pill">
           <span class="status-dot"></span> <span id="status-text" data-i18n="status_checking">Checking connection...</span>
         </div>
+
+        <!-- Visible Account/Profile Control -->
+        <button class="account-pill-btn" id="topbar-account-btn" data-view="account" aria-label="View account profile" title="View account profile">
+          <span class="account-pill-avatar" id="topbar-account-avatar">G</span>
+          <span class="account-pill-name" id="topbar-account-name">Guest</span>
+          <span class="account-pill-badge" id="topbar-account-badge">Guest</span>
+        </button>
       </div>
     </header>
 
@@ -314,6 +475,117 @@
 
             <div class="health-disclaimer-box" data-i18n="ai_disclaimer_notice">
               ⚠️ <strong>Important Notice:</strong> For healthcare and medical situations, NammaSpeak provides communication assistance only. It does not provide medical diagnoses or treatment recommendations. In emergencies, please dial <strong>108</strong> (Ambulance) or <strong>112</strong> (National Emergency).
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. Account & Profile View -->
+      <section class="content-section hidden" id="account-view">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">YOUR PROFILE</div>
+            <h2 id="account-title">Account & Settings</h2>
+          </div>
+        </div>
+
+        <div class="account-dashboard">
+          <!-- Guest Upgrade Callout (Requirement 5: Clear action for guests) -->
+          <div id="guest-upgrade-banner" class="guest-upgrade-card" hidden>
+            <div class="guest-upgrade-content">
+              <span class="sparkle-icon" aria-hidden="true">✨</span>
+              <div>
+                <h3>Change your mind? Create an account</h3>
+                <p>
+                  Save your phrases, practice streaks, and quiz results so you can access them from any device.
+                  Everything you've learned as a guest will be automatically kept!
+                </p>
+              </div>
+            </div>
+            <div class="guest-upgrade-actions">
+              <button id="account-upgrade-btn" class="button button-dark" type="button">
+                Create an account →
+              </button>
+              <button id="account-signin-merge-btn" class="button button-outline" type="button">
+                Or sign in to existing account
+              </button>
+            </div>
+          </div>
+
+          <!-- Two-column balanced layout on desktop, responsive single-column on mobile -->
+          <div class="account-columns-grid">
+            <!-- Left Column: Profile Card & Session/Sign Out -->
+            <div class="account-grid-col account-col-left">
+              <!-- Profile Card -->
+              <div class="account-card profile-summary-card">
+                <div class="account-header-row">
+                  <div class="account-avatar-large" id="account-avatar-large">G</div>
+                  <div class="account-info-col">
+                    <h3 id="account-name" class="account-user-name">Guest Learner</h3>
+                    <p id="account-email" class="account-user-email">guest@device.local</p>
+                    <div class="account-badge-wrap">
+                      <span id="account-badge" class="account-status-badge guest">Guest Mode</span>
+                    </div>
+                  </div>
+                </div>
+                <p id="account-kind" class="account-description-note">
+                  Guest progress is saved on this device. Create an account to preserve it across devices.
+                </p>
+              </div>
+
+              <!-- Session & Sign Out Card (Requirement 2 & 3) -->
+              <div class="account-card account-actions-card">
+                <h4 class="card-subtitle">Session & Sign Out</h4>
+                <p class="card-hint" id="signout-hint">
+                  Sign out of this session. You will be returned to the welcome screen.
+                </p>
+                <button id="account-sign-out" class="button button-danger" type="button">
+                  Sign out
+                </button>
+              </div>
+            </div>
+
+            <!-- Right Column: Learning Snapshot & Interface Language -->
+            <div class="account-grid-col account-col-right">
+              <!-- Learning Stats Overview -->
+              <div class="account-card account-stats-card">
+                <h4 class="card-subtitle">Learning Snapshot</h4>
+                <div class="account-stats-grid">
+                  <div class="account-stat-box">
+                    <span class="stat-number" id="account-stat-saved">0</span>
+                    <span class="stat-label">Saved Phrases</span>
+                  </div>
+                  <div class="account-stat-box">
+                    <span class="stat-number" id="account-stat-answered">0</span>
+                    <span class="stat-label">Questions Answered</span>
+                  </div>
+                  <div class="account-stat-box">
+                    <span class="stat-number" id="account-stat-accuracy">0%</span>
+                    <span class="stat-label">Quiz Accuracy</span>
+                  </div>
+                  <div class="account-stat-box">
+                    <span class="stat-number" id="account-stat-revision">0</span>
+                    <span class="stat-label">In Revision</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Interface Language Selector -->
+              <div class="account-card account-language-card">
+                <h4 class="card-subtitle">Interface Language</h4>
+                <p class="card-hint">
+                  Explanations, translations, and quizzes will be shown in this language:
+                </p>
+                <div class="account-field-group">
+                  <select id="account-language" aria-label="Preferred interface language">
+                    <option value="en">English</option>
+                    <option value="hi">हिन्दी (Hindi)</option>
+                    <option value="bn">বাংলা (Bengali)</option>
+                    <option value="ta">தமிழ் (Tamil)</option>
+                    <option value="te">తెలుగు (Telugu)</option>
+                  </select>
+                </div>
+              </div>
             </div>
           </div>
         </div>

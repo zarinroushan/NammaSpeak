@@ -90,12 +90,13 @@ def validate_and_record_answer(scenario_id, option_id, user_id="default", lang="
 
             # Update phrase learning stats (adaptive revision)
             if related_phrase_id:
-                stat = conn.execute("SELECT * FROM phrase_learning_stats WHERE phrase_id = ?", (related_phrase_id,)).fetchone()
+                stat = conn.execute("SELECT * FROM phrase_learning_stats WHERE user_id = ? AND phrase_id = ?", (user_id, related_phrase_id)).fetchone()
                 if not stat:
                     conn.execute("""
-                        INSERT INTO phrase_learning_stats (phrase_id, attempts, correct_count, mistakes, needs_revision, last_attempt_at)
-                        VALUES (?, 1, ?, ?, ?, CURRENT_TIMESTAMP)
+                        INSERT INTO phrase_learning_stats (user_id, phrase_id, attempts, correct_count, mistakes, needs_revision, last_attempt_at)
+                        VALUES (?, ?, 1, ?, ?, ?, CURRENT_TIMESTAMP)
                     """, (
+                        user_id,
                         related_phrase_id,
                         1 if is_correct else 0,
                         0 if is_correct else 1,
@@ -109,8 +110,8 @@ def validate_and_record_answer(scenario_id, option_id, user_id="default", lang="
                     conn.execute("""
                         UPDATE phrase_learning_stats
                         SET attempts = ?, correct_count = ?, mistakes = ?, needs_revision = ?, last_attempt_at = CURRENT_TIMESTAMP
-                        WHERE phrase_id = ?
-                    """, (new_attempts, new_stat_correct, new_mistakes, needs_rev, related_phrase_id))
+                        WHERE user_id = ? AND phrase_id = ?
+                    """, (new_attempts, new_stat_correct, new_mistakes, needs_rev, user_id, related_phrase_id))
 
         result = {
             "scenario_id": scenario_id,
@@ -135,9 +136,9 @@ def get_user_progress(user_id="default"):
         best = prog["best_score"] if prog else 0
         accuracy = round((correct / answered * 100)) if answered > 0 else 0
 
-        saved_count = conn.execute("SELECT COUNT(*) AS c FROM saved_phrases").fetchone()["c"]
-        revision_count = conn.execute("SELECT COUNT(*) AS c FROM phrase_learning_stats WHERE needs_revision > 0").fetchone()["c"]
-        mastered_count = conn.execute("SELECT COUNT(*) AS c FROM phrase_learning_stats WHERE attempts > 0 AND mistakes = 0").fetchone()["c"]
+        saved_count = conn.execute("SELECT COUNT(*) AS c FROM saved_phrases WHERE user_id = ?", (user_id,)).fetchone()["c"]
+        revision_count = conn.execute("SELECT COUNT(*) AS c FROM phrase_learning_stats WHERE user_id = ? AND needs_revision > 0", (user_id,)).fetchone()["c"]
+        mastered_count = conn.execute("SELECT COUNT(*) AS c FROM phrase_learning_stats WHERE user_id = ? AND attempts > 0 AND mistakes = 0", (user_id,)).fetchone()["c"]
 
         # Category level breakdown
         category_stats_cursor = conn.execute("""
@@ -146,9 +147,9 @@ def get_user_progress(user_id="default"):
                    SUM(CASE WHEN s.attempts > 0 THEN 1 ELSE 0 END) as practiced,
                    SUM(CASE WHEN s.mistakes = 0 AND s.attempts > 0 THEN 1 ELSE 0 END) as mastered
             FROM phrases p
-            LEFT JOIN phrase_learning_stats s ON p.id = s.phrase_id
+            LEFT JOIN phrase_learning_stats s ON p.id = s.phrase_id AND s.user_id = ?
             GROUP BY p.category
-        """)
+        """, (user_id,))
         category_breakdown = [dict(r) for r in category_stats_cursor.fetchall()]
 
         return {
@@ -165,17 +166,17 @@ def get_user_progress(user_id="default"):
         conn.close()
 
 
-def get_adaptive_revision_list(lang="en"):
+def get_adaptive_revision_list(lang="en", user_id="default"):
     from backend.services.translation_service import translation_service
     conn = get_db_connection()
     try:
         cursor = conn.execute("""
             SELECT p.*, s.attempts, s.mistakes, s.correct_count, s.needs_revision, s.last_attempt_at
             FROM phrases p
-            JOIN phrase_learning_stats s ON p.id = s.phrase_id
+            JOIN phrase_learning_stats s ON p.id = s.phrase_id AND s.user_id = ?
             WHERE s.needs_revision > 0 OR s.mistakes > 0
             ORDER BY s.mistakes DESC, s.last_attempt_at DESC
-        """)
+        """, (user_id,))
         rows = [dict(r) for r in cursor.fetchall()]
 
         if lang and lang != "en":
@@ -186,15 +187,15 @@ def get_adaptive_revision_list(lang="en"):
         conn.close()
 
 
-def mark_phrase_revised(phrase_id):
+def mark_phrase_revised(phrase_id, user_id="default"):
     conn = get_db_connection()
     try:
         with conn:
             conn.execute("""
                 UPDATE phrase_learning_stats
                 SET needs_revision = 0
-                WHERE phrase_id = ?
-            """, (phrase_id,))
+                WHERE user_id = ? AND phrase_id = ?
+            """, (user_id, phrase_id))
         return True
     finally:
         conn.close()

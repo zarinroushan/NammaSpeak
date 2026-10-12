@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request
 from backend.services.revision_service import get_all_scenarios, get_scenario_by_id, validate_and_record_answer
+from backend.auth import require_user
 
 practice_bp = Blueprint("practice", __name__)
 
@@ -25,14 +26,15 @@ def get_scenario(scenario_id):
 
 
 @practice_bp.route("/api/practice/answer", methods=["POST"])
-def submit_answer():
+@require_user
+def submit_answer(user):
     data = request.get_json(silent=True)
     if not data:
         return jsonify({"error": "JSON body required"}), 400
 
     scenario_id = data.get("scenario_id")
     option_id = data.get("option_id")
-    user_id = data.get("user_id", "default")
+    user_id = user["id"]
     lang = (data.get("lang") or "en").lower().strip()
 
     if not scenario_id or not option_id:

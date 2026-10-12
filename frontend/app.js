@@ -39,9 +39,11 @@ const state = {
   aiHistory: [],
   backendConnected: false,
   aiProviderName: "Local Offline Engine",
+  user: null,
   language: localStorage.getItem("nammaspeak_language") || "en",
   uiStrings: {},
-  translationRequestId: 0
+  translationRequestId: 0,
+  pendingRegistration: false
 };
 
 // DOM Helper
@@ -106,7 +108,7 @@ function formatText(key, fallback, values = {}) {
 }
 
 function initializeLanguageSelection() {
-  const panel = $("language-onboarding");
+  const panel = $("language-view");
   const select = $("preferred-language");
   const saveButton = $("save-language");
 
@@ -115,22 +117,18 @@ function initializeLanguageSelection() {
     return;
   }
 
-  const savedLanguage = getPreferredLanguage();
-  state.language = savedLanguage;
-  select.value = uiTranslations[savedLanguage] ? savedLanguage : "en";
+  select.value = getPreferredLanguage();
 
   function updateWelcome(language) {
     const t = uiTranslations[language] || uiTranslations.en;
 
-    $("welcome-title").textContent = text("onboarding_title", t.welcome);
-    $("welcome-description").textContent = text("onboarding_description", t.description);
-    $("language-label").textContent = text("onboarding_label", t.label);
+    if ($("welcome-title")) $("welcome-title").textContent = text("onboarding_title", t.welcome);
+    if ($("welcome-description")) $("welcome-description").textContent = text("onboarding_description", t.description);
+    if ($("language-label")) $("language-label").textContent = text("onboarding_label", t.label);
     saveButton.textContent = text("onboarding_btn", `${t.start} →`);
   }
 
   updateWelcome(select.value);
-
-  panel.hidden = Boolean(localStorage.getItem(LANGUAGE_KEY) && uiTranslations[savedLanguage]);
 
   select.addEventListener("change", () => {
     updateWelcome(select.value);
@@ -138,12 +136,85 @@ function initializeLanguageSelection() {
 
   saveButton.addEventListener("click", async () => {
     await changeLanguage(select.value);
-    panel.hidden = true;
+    if (state.user) {
+      try {
+        const response = await api.updateLanguage(select.value);
+        state.user = response.user || state.user;
+      } catch (error) {
+        console.warn("Could not save language preference:", error.message);
+      }
+    }
+    showAppShell("explore");
+    await loadApplicationData();
   });
 
   $("topbar-language")?.addEventListener("change", (event) => {
     changeLanguage(event.target.value);
   });
+}
+
+function showAuthScreen(screenName) {
+  $("app-shell").hidden = true;
+  const authScreens = ["welcome", "signin", "register", "language"];
+  authScreens.forEach((name) => {
+    const el = $(`${name}-view`);
+    if (el) el.hidden = name !== screenName;
+  });
+
+  if (screenName === "signin") {
+    if ($("sign-in-error")) $("sign-in-error").textContent = "";
+    if ($("sign-in-password")) $("sign-in-password").value = "";
+    const signinBackBtn = $("signin-back-btn");
+    if (signinBackBtn) {
+      signinBackBtn.textContent = state.user?.account_type === "guest" ? "← Back to Account" : "← Back to Welcome";
+    }
+    setTimeout(() => $("sign-in-email")?.focus(), 50);
+  } else if (screenName === "register") {
+    if ($("register-error")) $("register-error").textContent = "";
+    if ($("register-password")) $("register-password").value = "";
+    const banner = $("register-guest-merge-banner");
+    const isGuest = state.user?.account_type === "guest";
+    if (banner) {
+      banner.hidden = !isGuest;
+      banner.style.display = isGuest ? "" : "none";
+    }
+    const backBtn = $("register-back-btn");
+    if (backBtn) {
+      backBtn.textContent = isGuest ? "← Back to Account" : "← Back to Welcome";
+    }
+    if ($("register-language")) {
+      $("register-language").value = state.language || getPreferredLanguage();
+    }
+    setTimeout(() => $("register-name")?.focus(), 50);
+  } else if (screenName === "language") {
+    if ($("preferred-language")) {
+      $("preferred-language").value = state.language || getPreferredLanguage();
+    }
+  }
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function showAppShell(viewName = "explore") {
+  ["welcome", "signin", "register", "language"].forEach((name) => {
+    const el = $(`${name}-view`);
+    if (el) el.hidden = true;
+  });
+  $("app-shell").hidden = false;
+  setView(viewName);
+}
+
+async function loadApplicationData() {
+  await loadTranslations(state.language, true);
+  await Promise.allSettled([
+    loadCategories(),
+    loadPhrases(),
+    loadSavedPhrases(),
+    loadScenarios(),
+    loadProgress(),
+    loadRevisionQueue()
+  ]);
+  renderAll();
 }
 
 async function loadTranslations(language, showFallbackNotice = false) {
@@ -198,8 +269,26 @@ async function changeLanguage(language) {
  */
 async function initApp() {
   initializeLanguageSelection();
+  setupAccessHandlers();
   setupEventListeners();
   $("topbar-language") && ($("topbar-language").value = state.language);
+
+  try {
+    const auth = await api.getAuth();
+    if (!auth.authenticated) {
+      showAuthScreen("welcome");
+      return;
+    }
+    state.user = auth.user;
+    state.language = auth.user.preferred_language || getPreferredLanguage();
+    localStorage.setItem(LANGUAGE_KEY, state.language);
+    showAppShell("explore");
+    renderAccount();
+  } catch (err) {
+    console.warn("Authentication status check failed:", err.message);
+    showAuthScreen("welcome");
+    return;
+  }
 
   try {
     // 1. Health check & Backend metadata
@@ -213,19 +302,92 @@ async function initApp() {
     updateBackendStatusBadge(false, "Offline / Local Mode");
   }
 
-  await loadTranslations(state.language, true);
+  await loadApplicationData();
+}
 
-  // 2. Fetch initial data concurrently
-  await Promise.allSettled([
-    loadCategories(),
-    loadPhrases(),
-    loadSavedPhrases(),
-    loadScenarios(),
-    loadProgress(),
-    loadRevisionQueue()
-  ]);
+function renderAccount() {
+  const user = state.user;
+  if (!user) {
+    const upgradeBanner = $("guest-upgrade-banner");
+    if (upgradeBanner) {
+      upgradeBanner.hidden = true;
+      upgradeBanner.style.display = "none";
+    }
+    if ($("topbar-account-avatar")) $("topbar-account-avatar").textContent = "G";
+    if ($("topbar-account-name")) $("topbar-account-name").textContent = "Guest";
+    if ($("topbar-account-badge")) $("topbar-account-badge").textContent = "Guest";
+    if ($("nav-account-type-badge")) $("nav-account-type-badge").textContent = "Guest";
+    $("topbar-account-btn")?.classList.remove("registered");
+    return;
+  }
 
-  renderAll();
+  const isRegistered = user.account_type === "registered";
+  const isGuest = user.account_type === "guest";
+  const displayName = user.name || (isRegistered ? "Learner" : "Guest Learner");
+  const displayEmail = isRegistered ? (user.email || "") : "guest@device.local";
+  const initial = (user.name ? user.name[0].toUpperCase() : (isRegistered ? "A" : "G"));
+
+  if ($("account-name")) $("account-name").textContent = displayName;
+  if ($("account-email")) {
+    $("account-email").textContent = displayEmail;
+    $("account-email").style.display = displayEmail ? "" : "none";
+  }
+  if ($("account-kind")) {
+    $("account-kind").textContent = isRegistered
+      ? "Your learning progress, saved phrases, and quiz scores are synced with this account."
+      : "Guest progress is saved on this device. Create an account to preserve it across devices.";
+  }
+  if ($("account-badge")) {
+    $("account-badge").textContent = isRegistered ? "Registered Account" : "Guest Mode";
+    $("account-badge").className = `account-status-badge ${isRegistered ? "registered" : "guest"}`;
+  }
+  const avatarLarge = $("account-avatar-large");
+  if (avatarLarge) {
+    avatarLarge.textContent = initial;
+    avatarLarge.className = `account-avatar-large ${isRegistered ? "" : "guest"}`;
+  }
+
+  // Topbar profile pill button
+  const topbarBtn = $("topbar-account-btn");
+  if (topbarBtn) {
+    topbarBtn.classList.toggle("registered", isRegistered);
+  }
+  if ($("topbar-account-avatar")) $("topbar-account-avatar").textContent = initial;
+  if ($("topbar-account-name")) {
+    const firstName = user.name ? user.name.split(" ")[0] : (isRegistered ? "Learner" : "Guest");
+    $("topbar-account-name").textContent = firstName;
+  }
+  if ($("topbar-account-badge")) {
+    $("topbar-account-badge").textContent = isRegistered ? "Account" : "Guest";
+  }
+  if ($("nav-account-type-badge")) {
+    $("nav-account-type-badge").textContent = isRegistered ? "Account" : "Guest";
+  }
+
+  // Guest Upgrade Banner (Requirement: strictly visible ONLY for guest sessions)
+  const upgradeBanner = $("guest-upgrade-banner");
+  if (upgradeBanner) {
+    upgradeBanner.hidden = !isGuest;
+    upgradeBanner.style.display = isGuest ? "" : "none";
+  }
+
+  // Language selector in account
+  if ($("account-language")) $("account-language").value = state.language;
+
+  // Stats snapshot in account
+  const savedCount = state.progress.saved_count !== undefined
+    ? state.progress.saved_count
+    : (state.savedPhrases ? state.savedPhrases.length : 0);
+  const answeredCount = state.progress.answered || 0;
+  const accuracyText = (state.progress.accuracy || 0) + "%";
+  const revisionCount = state.progress.revision_count !== undefined
+    ? state.progress.revision_count
+    : (state.revisionPhrases ? state.revisionPhrases.length : 0);
+
+  if ($("account-stat-saved")) $("account-stat-saved").textContent = String(savedCount);
+  if ($("account-stat-answered")) $("account-stat-answered").textContent = String(answeredCount);
+  if ($("account-stat-accuracy")) $("account-stat-accuracy").textContent = accuracyText;
+  if ($("account-stat-revision")) $("account-stat-revision").textContent = String(revisionCount);
 }
 
 /**
@@ -320,6 +482,7 @@ function renderAll() {
   renderProgressStats();
   renderRevisionQueue();
   renderScenarioQuestion();
+  renderAccount();
 }
 
 function renderCategories() {
@@ -502,7 +665,7 @@ async function handleAnswerSelection(optionId) {
   // Submit to backend for validation and persistent progress recording
   let result;
   try {
-    result = await api.submitAnswer(scenario.id, optionId, "default", state.language);
+    result = await api.submitAnswer(scenario.id, optionId, state.language);
   } catch (err) {
     // Local fallback evaluation if network drop
     const opt = scenario.options.find(o => o.id === optionId || String(scenario.options.indexOf(o)) === optionId);
@@ -807,7 +970,7 @@ function appendAIChatBubble(sender, knText, roman = "", en = "", tip = "", discl
  */
 function setView(viewName) {
   state.currentView = viewName;
-  const views = ["explore", "practice", "saved", "revision", "ai"];
+  const views = ["explore", "practice", "saved", "revision", "ai", "account"];
 
   views.forEach(v => {
     const el = $(`${v}-view`);
@@ -817,9 +980,11 @@ function setView(viewName) {
   document.querySelectorAll(".nav-link").forEach(btn => {
     btn.classList.toggle("active", btn.dataset.view === viewName);
   });
+  $("topbar-account-btn")?.classList.toggle("active", viewName === "account");
 
   if (viewName === "saved") renderSavedPhrases();
   if (viewName === "revision") renderRevisionQueue();
+  if (viewName === "account") renderAccount();
 
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
@@ -963,9 +1128,177 @@ function setupEventListeners() {
     }
   });
 
+  // Language setting change inside Account dashboard
+  $("account-language")?.addEventListener("change", async (event) => {
+    await changeLanguage(event.target.value);
+    try {
+      const response = await api.updateLanguage(event.target.value);
+      state.user = response.user || state.user;
+      renderAccount();
+    } catch (error) {
+      showToast(`Could not save language preference: ${error.message}`, "error");
+    }
+  });
+
   // Modal close button
   $("explain-modal-close")?.addEventListener("click", () => {
     $("explain-modal")?.classList.add("hidden");
+  });
+}
+
+function setupAccessHandlers() {
+  // 1. Welcome Screen Actions
+  $("continue-guest")?.addEventListener("click", async () => {
+    try {
+      const response = await api.createGuest(state.language);
+      state.user = response.user;
+      if (!localStorage.getItem(LANGUAGE_KEY)) {
+        showAuthScreen("language");
+      } else {
+        showAppShell("explore");
+        await loadApplicationData();
+      }
+    } catch (error) {
+      showToast(`Could not start guest mode: ${error.message}`, "error");
+    }
+  });
+
+  $("show-sign-in")?.addEventListener("click", () => {
+    showAuthScreen("signin");
+  });
+
+  $("show-register")?.addEventListener("click", () => {
+    showAuthScreen("register");
+  });
+
+  // 2. Navigation between Auth Screens
+  $("signin-back-btn")?.addEventListener("click", () => {
+    if (state.user) {
+      showAppShell("account");
+    } else {
+      showAuthScreen("welcome");
+    }
+  });
+
+  $("signin-to-register-btn")?.addEventListener("click", () => {
+    showAuthScreen("register");
+  });
+
+  $("register-back-btn")?.addEventListener("click", () => {
+    if (state.user) {
+      showAppShell("account");
+    } else {
+      showAuthScreen("welcome");
+    }
+  });
+
+  $("register-to-signin-btn")?.addEventListener("click", () => {
+    showAuthScreen("signin");
+  });
+
+  // 3. Guest Upgrade Actions (from Account screen)
+  $("account-upgrade-btn")?.addEventListener("click", () => {
+    showAuthScreen("register");
+  });
+
+  $("account-signin-merge-btn")?.addEventListener("click", () => {
+    showAuthScreen("signin");
+  });
+
+  // 4. Topbar Profile Button
+  $("topbar-account-btn")?.addEventListener("click", () => {
+    setView("account");
+  });
+
+  // 5. Sign-in Form Submission
+  $("sign-in-form")?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const error = $("sign-in-error");
+    if (error) error.textContent = "";
+    const email = $("sign-in-email")?.value.trim();
+    const password = $("sign-in-password")?.value;
+    if (!email || !password) {
+      if (error) error.textContent = "Email and password are required";
+      return;
+    }
+    try {
+      const response = await api.login(email, password);
+      state.user = response.user;
+      state.language = response.user.preferred_language || getPreferredLanguage();
+      localStorage.setItem(LANGUAGE_KEY, state.language);
+      showAppShell("explore");
+      showToast(`Welcome back, ${state.user.name}!`, "success");
+      await loadApplicationData();
+    } catch (err) {
+      if (error) error.textContent = err.message || "Email or password is incorrect";
+    }
+  });
+
+  // 6. Registration Form Submission
+  $("register-form")?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const error = $("register-error");
+    if (error) error.textContent = "";
+    const name = $("register-name")?.value.trim();
+    const email = $("register-email")?.value.trim();
+    const password = $("register-password")?.value;
+    const language = $("register-language")?.value || state.language || getPreferredLanguage();
+    if (!name || !email || !password) {
+      if (error) error.textContent = "All fields are required";
+      return;
+    }
+    if (password.length < 8) {
+      if (error) error.textContent = "Password must be at least 8 characters";
+      return;
+    }
+    try {
+      const response = await api.registerAccount(name, email, password, language);
+      state.user = response.user;
+      state.language = response.user.preferred_language || language;
+      localStorage.setItem(LANGUAGE_KEY, state.language);
+      showAppShell("explore");
+      showToast(`Account created! Welcome, ${state.user.name}!`, "success");
+      await loadApplicationData();
+    } catch (err) {
+      if (error) error.textContent = err.message || "Failed to create account";
+    }
+  });
+
+  // 7. Working Sign Out (Requirements 2 & 3: calls logout endpoint, clears frontend state, returns to welcome without reload)
+  $("account-sign-out")?.addEventListener("click", async () => {
+    try {
+      await api.logout();
+    } catch (err) {
+      console.warn("Logout request error:", err.message);
+    }
+    state.user = null;
+    state.savedPhrases = [];
+    state.revisionPhrases = [];
+    state.progress = {
+      answered: 0,
+      correct: 0,
+      accuracy: 0,
+      best_score: 0,
+      saved_count: 0,
+      revision_count: 0
+    };
+    state.aiHistory = [];
+    state.phrases = [];
+    state.currentScenarioIndex = 0;
+    state.scenarioAnswered = false;
+    state.scenarioSessionCorrect = 0;
+    stopKannadaSpeech();
+
+    if ($("sign-in-password")) $("sign-in-password").value = "";
+    if ($("sign-in-error")) $("sign-in-error").textContent = "";
+    if ($("register-password")) $("register-password").value = "";
+    if ($("register-error")) $("register-error").textContent = "";
+
+    if ($("saved-count")) $("saved-count").textContent = "0";
+    if ($("revision-count")) $("revision-count").textContent = "0";
+
+    showAuthScreen("welcome");
+    showToast("Signed out successfully", "info");
   });
 }
 

@@ -63,6 +63,42 @@ async function requestAudio(endpoint, options = {}) {
 }
 
 export const api = {
+  async getAuth() {
+    return request("/api/auth/me");
+  },
+
+  async createGuest(language = null) {
+    return request("/api/auth/guest", {
+      method: "POST",
+      body: JSON.stringify({ language })
+    });
+  },
+
+  async registerAccount(name, email, password, language) {
+    return request("/api/auth/register", {
+      method: "POST",
+      body: JSON.stringify({ name, email, password, language })
+    });
+  },
+
+  async login(email, password) {
+    return request("/api/auth/login", {
+      method: "POST",
+      body: JSON.stringify({ email, password })
+    });
+  },
+
+  async logout() {
+    return request("/api/auth/logout", { method: "POST" });
+  },
+
+  async updateLanguage(language) {
+    return request("/api/auth/language", {
+      method: "POST",
+      body: JSON.stringify({ language })
+    });
+  },
+
   // Health
   async getHealth() {
     return request("/api/health");
@@ -108,13 +144,12 @@ export const api = {
     return request(`/api/practice/scenarios/${encodeURIComponent(id)}${qs}`);
   },
 
-  async submitAnswer(scenarioId, optionId, userId = "default", lang = "en") {
+  async submitAnswer(scenarioId, optionId, lang = "en") {
     return request("/api/practice/answer", {
       method: "POST",
       body: JSON.stringify({
         scenario_id: scenarioId,
         option_id: optionId,
-        user_id: userId,
         lang: lang
       })
     });
@@ -140,14 +175,14 @@ export const api = {
   },
 
   // Progress & Adaptive Revision
-  async getProgress(userId = "default") {
-    return request(`/api/progress?user_id=${encodeURIComponent(userId)}`);
+  async getProgress() {
+    return request("/api/progress");
   },
 
-  async resetProgress(userId = "default") {
+  async resetProgress() {
     return request("/api/progress", {
       method: "POST",
-      body: JSON.stringify({ action: "reset", user_id: userId })
+      body: JSON.stringify({ action: "reset" })
     });
   },
 

@@ -1,5 +1,6 @@
 import pytest
 import json
+import os
 
 from backend.app import create_app
 from backend.models import init_db
@@ -12,6 +13,7 @@ def client(tmp_path):
     app = create_app({
         "TESTING": True,
         "DATABASE_PATH": str(tmp_path / "test.db"),
+        "DATABASE_URL": f"sqlite:///{(tmp_path / 'test.db').as_posix()}",
     })
     return app.test_client()
 
@@ -71,6 +73,7 @@ def test_static_ui_translations_use_offline_dictionary_without_provider_call(tmp
     db_path = str(tmp_path / "gemini.db")
     init_db(db_path)
     monkeypatch.setattr(translation_module.Config, "DATABASE_PATH", db_path)
+    monkeypatch.setattr(translation_module.Config, "DATABASE_URL", f"sqlite:///{db_path.replace(os.sep, '/')}")
     monkeypatch.setattr(translation_module.Config, "AI_PROVIDER", "gemini")
     monkeypatch.setattr(translation_module.Config, "GEMINI_API_KEY", "test-key")
 
@@ -102,6 +105,7 @@ def test_explicit_batch_translation_still_uses_configured_provider(tmp_path, mon
     db_path = str(tmp_path / "batch.db")
     init_db(db_path)
     monkeypatch.setattr(translation_module.Config, "DATABASE_PATH", db_path)
+    monkeypatch.setattr(translation_module.Config, "DATABASE_URL", f"sqlite:///{db_path.replace(os.sep, '/')}")
     monkeypatch.setattr(translation_module.Config, "AI_PROVIDER", "gemini")
     monkeypatch.setattr(translation_module.Config, "GEMINI_API_KEY", "test-key")
 
@@ -127,6 +131,7 @@ def test_configured_provider_failure_uses_offline_without_caching_as_translation
     db_path = str(tmp_path / "failure.db")
     init_db(db_path)
     monkeypatch.setattr(translation_module.Config, "DATABASE_PATH", db_path)
+    monkeypatch.setattr(translation_module.Config, "DATABASE_URL", f"sqlite:///{db_path.replace(os.sep, '/')}")
     monkeypatch.setattr(translation_module.Config, "AI_PROVIDER", "gemini")
     monkeypatch.setattr(translation_module.Config, "GEMINI_API_KEY", "test-key")
 

@@ -11,7 +11,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from backend.config import Config
-from backend.models import init_db
+from backend.models import init_db, seed_database, verify_database
 from backend.routes.health import health_bp
 from backend.routes.phrases import phrases_bp
 from backend.routes.practice import practice_bp
@@ -19,23 +19,38 @@ from backend.routes.progress import progress_bp
 from backend.routes.ai import ai_bp
 from backend.routes.translations import translations_bp
 from backend.routes.speech import speech_bp
+from backend.routes.auth import auth_bp
 
 
 def create_app(test_config=None):
     app = Flask(__name__)
     app.config.from_mapping(
         SECRET_KEY=Config.SECRET_KEY,
-        DATABASE_PATH=Config.DATABASE_PATH
+        DATABASE_URL=Config.DATABASE_URL,
+        SESSION_COOKIE_HTTPONLY=True,
+        SESSION_COOKIE_SAMESITE="Lax",
+        SESSION_COOKIE_SECURE=Config.SESSION_COOKIE_SECURE,
+        PERMANENT_SESSION_LIFETIME=60 * 60 * 24 * 365,
     )
 
     if test_config:
         app.config.update(test_config)
+        if not app.config.get("DATABASE_URL") and app.config.get("DATABASE_PATH"):
+            path = Path(app.config["DATABASE_PATH"]).resolve().as_posix()
+            app.config["DATABASE_URL"] = f"sqlite:///{path}"
 
     # Enable CORS for local API access
     CORS(app)
 
-    # Initialize SQLite database and seed initial data
-    init_db(app.config.get("DATABASE_PATH"))
+    database_url = app.config.get("DATABASE_URL")
+    if database_url and database_url.startswith("postgresql"):
+        verify_database(database_url)
+        seed_database(database_url)
+    else:
+        # SQLite is intentionally limited to explicit test configurations.
+        if not app.config.get("TESTING") and os.getenv("NAMMASPEAK_TESTING") != "1":
+            raise RuntimeError("A PostgreSQL DATABASE_URL is required for runtime application access")
+        init_db(database_url)
 
     # Register API Blueprints
     app.register_blueprint(health_bp)
@@ -45,6 +60,7 @@ def create_app(test_config=None):
     app.register_blueprint(ai_bp)
     app.register_blueprint(translations_bp)
     app.register_blueprint(speech_bp)
+    app.register_blueprint(auth_bp)
 
     frontend_dir = PROJECT_ROOT / "frontend"
 

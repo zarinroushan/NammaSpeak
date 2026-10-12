@@ -1482,7 +1482,8 @@ button {
   background: #faf6f0;
 }
 
-.hidden {
+.hidden,
+[hidden] {
   display: none !important;
 }
 
@@ -1612,77 +1613,581 @@ footer {
   }
 }
 
-/* First-visit language selection */
-.language-onboarding:not([hidden]) {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  display: grid;
-  place-items: center;
-  padding: 20px;
-  background: rgba(37, 37, 31, 0.72);
-  overflow-y: auto;
+/* ==========================================================================
+   Full-Page Auth & Onboarding Screens (Non-Modal)
+   ========================================================================== */
+
+.auth-page-screen {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  background: var(--bg);
+  box-sizing: border-box;
 }
 
-.language-panel {
-  width: min(100%, 480px);
-  padding: 36px;
+.auth-page-screen[hidden] {
+  display: none !important;
+}
+
+.auth-card {
+  width: min(100%, 460px);
+  padding: 36px 32px;
   border: 1px solid var(--line);
-  border-radius: 24px;
+  border-radius: var(--radius-lg);
   background: var(--white);
   color: var(--ink);
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 16px 48px rgba(48, 32, 12, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-sizing: border-box;
 }
 
-.language-panel h1 {
-  margin: 12px 0;
+.auth-brand-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 2px;
+}
+
+.auth-brand-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-brand-name {
   font-family: var(--font-display);
-  font-size: clamp(28px, 5vw, 40px);
-  line-height: 1.15;
-  letter-spacing: -1px;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.5px;
 }
 
-.language-panel p {
-  line-height: 1.7;
+.auth-brand-tagline {
+  font-family: var(--font-body);
+  font-size: 8.5px;
+  letter-spacing: 1.6px;
+  font-weight: 700;
   color: var(--muted);
 }
 
-.language-panel label {
-  display: block;
-  margin: 22px 0 8px;
-  font-size: 13px;
+.auth-title {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 4vw, 30px);
+  line-height: 1.2;
+  color: var(--ink);
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+.auth-desc {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--muted);
+  margin: 0;
+}
+
+.auth-actions-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.button-lg {
+  padding: 13px 20px;
+  font-size: 14px;
   font-weight: 700;
-}
-
-.language-panel select,
-.language-panel button {
-  width: 100%;
-  padding: 14px;
   border-radius: var(--radius-sm);
-  font: inherit;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.16s ease;
+  min-height: 46px;
+  box-sizing: border-box;
 }
 
-.language-panel select {
+.button-outline {
+  background: transparent;
   border: 1px solid var(--line);
-  background: white;
   color: var(--ink);
 }
 
-.language-panel button {
-  margin-top: 14px;
+.button-outline:hover {
+  border-color: var(--ink);
+  background: #fbf7f0;
+}
+
+.button-danger {
+  background: #dc3545;
+  color: #fff;
   border: 0;
-  background: var(--ink);
-  color: white;
   cursor: pointer;
+  padding: 10px 18px;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  font-size: 13px;
+  transition: background 0.16s ease;
+  min-height: 42px;
+}
+
+.button-danger:hover {
+  background: #b02a37;
+}
+
+.auth-footnote {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--muted);
+  margin: 6px 0 0;
+  text-align: center;
+}
+
+.auth-back-link {
+  background: none;
+  border: 0;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  align-self: flex-start;
+  margin-bottom: 2px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.16s ease;
+}
+
+.auth-back-link:hover {
+  color: var(--ink);
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 4px;
+}
+
+.auth-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.auth-field label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.auth-field input,
+.auth-field select,
+.account-card select {
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  background: var(--white);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 14px;
+  box-sizing: border-box;
+  transition: border-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.auth-field input:focus,
+.auth-field select:focus,
+.account-card select:focus {
+  outline: none;
+  border-color: var(--orange);
+  box-shadow: 0 0 0 3px rgba(223, 86, 44, 0.15);
+}
+
+.guest-merge-notice {
+  background: #fff8f0;
+  border: 1px solid #fed7aa;
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #9a3412;
+}
+
+.auth-switch-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.auth-inline-link {
+  background: none;
+  border: 0;
+  color: var(--orange);
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  font-size: 13px;
+}
+
+.auth-inline-link:hover {
+  color: var(--ink);
+}
+
+.form-error {
+  color: #dc3545;
+  font-size: 13px;
+  min-height: 1.3em;
+  margin: 2px 0 0;
+}
+
+/* ==========================================================================
+   Topbar Account Control (Profile Pill)
+   ========================================================================== */
+
+.account-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px 5px 6px;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  cursor: pointer;
+  transition: all 0.16s ease;
+  white-space: nowrap;
+}
+
+.account-pill-btn:hover,
+.account-pill-btn.active {
+  border-color: var(--orange);
+  background: #fff8f5;
+  box-shadow: 0 2px 8px rgba(223, 86, 44, 0.12);
+}
+
+.account-pill-avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--olive-light);
+  color: var(--olive);
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 800;
+  font-family: var(--font-display);
+}
+
+.account-pill-btn.registered .account-pill-avatar {
+  background: var(--orange-light);
+  color: var(--orange);
+}
+
+.account-pill-badge {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: #eee8de;
+  color: #6d685c;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
   font-weight: 700;
 }
 
-.language-panel button:hover {
-  background: var(--orange);
+.account-pill-btn.registered .account-pill-badge {
+  background: #e3eedc;
+  color: #2e6022;
+}
+
+/* ==========================================================================
+   Account Dashboard View
+   ========================================================================== */
+
+#account-view .section-heading {
+  max-width: 960px;
+  margin: 0 auto 26px;
+}
+
+.account-dashboard {
+  max-width: 960px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.account-columns-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+.account-grid-col {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.account-card {
+  padding: 24px;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.profile-summary-card {
+  gap: 16px;
+}
+
+.account-header-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.account-avatar-large {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--orange-light);
+  color: var(--orange);
+  display: grid;
+  place-items: center;
+  font-size: 24px;
+  font-weight: 800;
+  font-family: var(--font-display);
+  flex-shrink: 0;
+}
+
+.account-avatar-large.guest {
+  background: var(--olive-light);
+  color: var(--olive);
+}
+
+.account-info-col {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.account-user-name {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.account-user-email {
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.account-status-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  width: fit-content;
+}
+
+.account-status-badge.registered {
+  background: #e3eedc;
+  color: #2e6022;
+}
+
+.account-status-badge.guest {
+  background: #eee8de;
+  color: #6d685c;
+}
+
+.account-description-note {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.guest-upgrade-card {
+  background: #fffaf5;
+  border: 1px solid #fed7aa;
+  border-radius: var(--radius);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.guest-upgrade-card[hidden],
+#guest-upgrade-banner[hidden] {
+  display: none !important;
+}
+
+.guest-upgrade-content {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.guest-upgrade-content .sparkle-icon {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.guest-upgrade-content h3 {
+  margin: 0 0 6px;
+  font-size: 16px;
+  font-weight: 800;
+  color: #9a3412;
+}
+
+.guest-upgrade-content p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #7c2d12;
+}
+
+.guest-upgrade-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.card-subtitle {
+  margin: 0 0 4px;
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.card-hint {
+  margin: 0 0 10px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.account-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.account-stat-box {
+  background: #f7f3ec;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 4px;
+}
+
+.account-stat-box .stat-number {
+  font-size: 22px;
+  font-weight: 800;
+  font-family: var(--font-display);
+  color: var(--ink);
+}
+
+.account-stat-box .stat-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--muted);
+}
+
+.account-actions-card {
+  align-items: flex-start;
+}
+
+@media (max-width: 768px) {
+  .account-columns-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .account-col-left,
+  .account-col-right {
+    display: contents;
+  }
+
+  .profile-summary-card {
+    order: 1;
+  }
+
+  .account-stats-card {
+    order: 2;
+  }
+
+  .account-language-card {
+    order: 3;
+  }
+
+  .account-actions-card {
+    order: 4;
+  }
+}
+
+@media (max-width: 640px) {
+  .account-pill-name {
+    display: none;
+  }
 }
 
 @media (max-width: 480px) {
-  .language-panel {
-    padding: 24px;
+  .auth-page-screen {
+    padding: 20px 12px;
+    justify-content: flex-start;
+  }
+  .auth-card {
+    padding: 24px 20px;
+    border-radius: 20px;
+  }
+  .account-card {
+    padding: 18px 16px;
+  }
+  .guest-upgrade-card {
+    padding: 18px 16px;
+  }
+  .account-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .account-stat-box {
+    padding: 10px 6px;
+  }
+  .account-stat-box .stat-number {
+    font-size: 18px;
   }
 }
